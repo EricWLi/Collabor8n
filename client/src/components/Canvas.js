@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-function Canvas({ width, height }) {
+function Canvas({ width, height, tool }) {
   const [mouseDown, setMouseDown] = useState(false);
   const [strokes, setStrokes] = useState([]);
   const canvasRef = useRef(null);
@@ -9,48 +9,70 @@ function Canvas({ width, height }) {
     const ctx = canvasRef.current.getContext('2d');
 
     strokes.forEach(stroke => {
-      const first = stroke[0];
+      const first = stroke.points[0];
       ctx.beginPath();
       ctx.moveTo(first.x, first.y);
 
       // Canvas does not allow single point lines, so use a rectangle instead
-      if (stroke.length < 2) {
+      if (stroke.points.length < 2) {
         ctx.fillRect(first.x, first.y, 1, 1);
       }
 
-      for (let i = 1; i < stroke.length; i++) {
-        ctx.lineTo(stroke[i].x, stroke[i].y);
+      for (let i = 1; i < stroke.points.length; i++) {
+        ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
       }
 
+      ctx.strokeStyle = stroke.color;
+      ctx.lineWidth = stroke.width;
       ctx.stroke();
     });
 
   });
 
-  function handleMouseDown(e) {
-    setStrokes([...strokes, [
-      {
-        x: e.clientX,
-        y: e.clientY
-      }
-    ]]);
+  function calculateOffset(event) {
+    const canvas = canvasRef.current;
+    const boundingBox = canvas.getBoundingClientRect();
 
+    const scaleX = canvas.width / boundingBox.width;
+    const scaleY = canvas.height / boundingBox.height;
+
+    // Calculate new coordinates by scale factor
+    const x = (event.clientX - boundingBox.left) * scaleX;
+    const y = (event.clientY - boundingBox.top) * scaleY;
+    return [x, y];
+  }
+
+  function handleMouseDown(event) {
+    const [x, y] = calculateOffset(event);
+    const stroke = {
+      color: tool.color,
+      width: tool.brushSize,
+      points: [{x: x, y: y}]
+    };
+
+    setStrokes([...strokes, stroke]);
     setMouseDown(true);
   }
 
-  function handleMouseUp(e) {
+  function handleMouseUp() {
     setMouseDown(false);
   }
 
-  function handleMouseMove(e) {
+  function handleMouseMove(event) {
     if (!mouseDown || !strokes) {
       return;
     }
 
+    const [x, y] = calculateOffset(event);
+
     setStrokes(prevStrokes => {
       const currStroke = prevStrokes[prevStrokes.length - 1];
-      return [...prevStrokes.slice(0, prevStrokes.length - 1), [...currStroke, { x: e.clientX, y: e.clientY }]];
-    })
+      const nextPoint = [...currStroke.points, {x: x, y: y}];
+      return [...prevStrokes.slice(0, prevStrokes.length - 1), {
+        ...currStroke,
+        points: nextPoint
+      }];
+    });
   }
 
   return (
