@@ -15,7 +15,8 @@ function Canvas({ width, height, tool }) {
 
       // Canvas does not allow single point lines, so use a rectangle instead
       if (stroke.points.length < 2) {
-        ctx.fillRect(first.x, first.y, 1, 1);
+        const offset = stroke.width / 2;
+        ctx.fillRect(first.x - offset, first.y - offset, stroke.width, stroke.width);
       }
 
       for (let i = 1; i < stroke.points.length; i++) {
