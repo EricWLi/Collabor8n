@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 
-function Canvas({ width, height, tool }) {
+function Canvas({ width, height, tool, strokes, updateStrokes }) {
   const [mouseDown, setMouseDown] = useState(false);
-  const [strokes, setStrokes] = useState([]);
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
+
+    // Clear canvas, since bitmap elements keep their content even on re-render.
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
     strokes.forEach(stroke => {
       const first = stroke.points[0];
@@ -25,6 +27,8 @@ function Canvas({ width, height, tool }) {
 
       ctx.strokeStyle = stroke.color;
       ctx.lineWidth = stroke.width;
+      ctx.lineCap = 'round'
+      ctx.lineJoin = 'round'
       ctx.stroke();
     });
 
@@ -38,12 +42,17 @@ function Canvas({ width, height, tool }) {
     const scaleY = canvas.height / boundingBox.height;
 
     // Calculate new coordinates by scale factor
-    const x = (event.clientX - boundingBox.left) * scaleX;
-    const y = (event.clientY - boundingBox.top) * scaleY;
+    const x = Math.floor((event.clientX - boundingBox.left) * scaleX);
+    const y = Math.floor((event.clientY - boundingBox.top) * scaleY);
     return [x, y];
   }
 
   function handleMouseDown(event) {
+    // Ignore right and middle clicks
+    if (event.button !== 0) {
+      return;
+    }
+
     const [x, y] = calculateOffset(event);
     const stroke = {
       color: tool.color,
@@ -51,7 +60,7 @@ function Canvas({ width, height, tool }) {
       points: [{x: x, y: y}]
     };
 
-    setStrokes([...strokes, stroke]);
+    updateStrokes([...strokes, stroke]);
     setMouseDown(true);
   }
 
@@ -66,7 +75,7 @@ function Canvas({ width, height, tool }) {
 
     const [x, y] = calculateOffset(event);
 
-    setStrokes(prevStrokes => {
+    updateStrokes(prevStrokes => {
       const currStroke = prevStrokes[prevStrokes.length - 1];
       const nextPoint = [...currStroke.points, {x: x, y: y}];
       return [...prevStrokes.slice(0, prevStrokes.length - 1), {
