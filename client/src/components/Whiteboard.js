@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
-import Canvas from "./Canvas";
-import ColorPicker from "./ColorPicker";
-import Toolbar from "./Toolbar";
+import { useState, useEffect, createContext } from 'react';
+import Canvas from './Canvas';
+import Toolbar from './Toolbar';
+
+export const ToolContext = createContext(null);
 
 function Whiteboard() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -9,7 +10,7 @@ function Whiteboard() {
   const [strokes, setStrokes] = useState([]);
   const [tool, setTool] = useState({
     tool: 'pencil',
-    brushSize: 1,
+    brushSize: 3,
     color: 'black'
   });
 
@@ -28,8 +29,11 @@ function Whiteboard() {
 
   /* Handlers */
 
-  function handleBrushSizeChange(size) {
-    setTool({...tool, brushSize: size});
+  function handleToolChange(newTool) {
+    setTool({
+      ...tool, 
+      ...newTool
+    });
   }
 
   function updateStrokes(nextStrokes) {
@@ -41,11 +45,12 @@ function Whiteboard() {
   }
 
   return (
-    <>
+    <div className='whiteboard-container'>
       <Canvas width={width} height={height} tool={tool} strokes={strokes} updateStrokes={updateStrokes} />
-      <Toolbar onToolChange={handleBrushSizeChange} onUndo={handleUndoStroke} />
-      <ColorPicker />
-    </>
+      <ToolContext.Provider value={tool}>
+        <Toolbar handleToolChange={handleToolChange} handleUndo={handleUndoStroke} />
+      </ToolContext.Provider>
+    </div>
   );
 }
 

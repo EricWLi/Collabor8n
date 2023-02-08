@@ -17,8 +17,7 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
 
       // Canvas does not allow single point lines, so use a rectangle instead
       if (stroke.points.length < 2) {
-        const offset = stroke.width / 2;
-        ctx.fillRect(first.x - offset, first.y - offset, stroke.width, stroke.width);
+        ctx.lineTo(first.x, first.y + 1);
       }
 
       for (let i = 1; i < stroke.points.length; i++) {
@@ -86,9 +85,9 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
   }
 
   return (
-    <>
+    <div className='canvas-container'>
       <canvas 
-        className="canvas"
+        className='canvas'
         ref={canvasRef}
         width={width} 
         height={height}
@@ -97,7 +96,7 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
         onMouseMove={handleMouseMove}
       >
       </canvas>
-    </>
+    </div>
   );
 }
 

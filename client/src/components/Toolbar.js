@@ -1,29 +1,44 @@
 import { useState } from 'react';
-import { Pencil, Eraser, Square, Circle, Palette, ArrowCounterclockwise, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
+import { Pencil, Eraser, Square, Palette, ArrowCounterclockwise, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
+import ToolbarMenu from './ToolbarMenu';
 
-function Toolbar({ onToolChange, onUndo }) {
+function Toolbar({ handleToolChange, handleUndo }) {
   const [open, setOpen] = useState(true);
+  const [currentMenu, setCurrentMenu] = useState(null);
 
   function toggleToolbar() {
+    if (open) {
+      setCurrentMenu(null);
+    }
+
     setOpen(!open);
+  }
+
+  function handleMenuClick(selected) {
+    // Close menu if the selected menu is already open
+    setCurrentMenu((selected === currentMenu) ? null : selected);
   }
 
   let content;
 
   if (open) {
+    // Show sidebar menu.
     content = (
-      <div className='toolbar'>
-        <div className='toolbar-item tool-pencil' onClick={onToolChange}><Pencil /></div>
-        <div className='toolbar-item tool-eraser' onClick={onToolChange}><Eraser /></div>
-        <div className='toolbar-item tool-square' onClick={onToolChange}><Square /></div>
-        <div className='toolbar-item tool-circle' onClick={onToolChange}><Circle /></div>
-        <div className='toolbar-item tool-palette'><Palette /></div>
-        <div className='toolbar-item tool-undo' onClick={onUndo}><ArrowCounterclockwise /></div>
-        <div className='toolbar-item tool-collapse' onClick={toggleToolbar}><ChevronLeft />
+      <div className='toolbar-container'>
+        <div className='toolbar'>
+          <div className='toolbar-item tool-pencil' onClick={() => handleMenuClick('pen')}><Pencil /></div>
+          <div className='toolbar-item tool-eraser' onClick={handleToolChange}><Eraser /></div>
+          <div className='toolbar-item tool-square' onClick={() => handleMenuClick('shape')}><Square /></div>
+          <div className='toolbar-item tool-palette' onClick={() => handleMenuClick('color')}><Palette /></div>
+          <div className='toolbar-item tool-undo' onClick={handleUndo}><ArrowCounterclockwise /></div>
+          <div className='toolbar-item tool-collapse' onClick={toggleToolbar}><ChevronLeft /></div>
+        </div>
+
+        { currentMenu && <ToolbarMenu menu={currentMenu} handleToolChange={handleToolChange} /> }
       </div>
-    </div>
     );
   } else {
+    // Hide sidebar menu; show toggle arrow.
     content = (
       <div className='toolbar-toggle'>
         <ChevronRight className='toolbar-expand' onClick={toggleToolbar} />
@@ -31,11 +46,7 @@ function Toolbar({ onToolChange, onUndo }) {
     );
   }
 
-  return (
-    <div className='toolbar-container'>
-      {content}
-    </div>
-  );
+  return content;
 }
 
 export default Toolbar;
