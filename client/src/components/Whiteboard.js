@@ -11,7 +11,7 @@ function Whiteboard() {
   const [tool, setTool] = useState({
     tool: 'pencil',
     brushSize: 3,
-    color: 'black'
+    color: '#000000'
   });
 
   useEffect(() => {

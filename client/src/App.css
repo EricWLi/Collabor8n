@@ -1,5 +1,6 @@
 body {
   overflow: hidden;
+  font-family: Roboto;
 }
 
 .whiteboard-container {
@@ -62,5 +63,23 @@ body {
 }
 
 .toolbar-menu-pen {
-  min-width: 256px;
+  min-width: 192px;
+}
+
+.toolbar-menu-color {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  min-width: 192px;
+}
+
+.toolbar-menu-color button {
+  border: 1px solid black;
+  margin: 8px;
+  height: 32px;
+  width: 32px;
+}
+
+.toolbar-menu-color button:hover {
+  transform: scale(1.2);
 }

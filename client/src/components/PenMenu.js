@@ -21,7 +21,7 @@ function PenMenu({ handleToolChange }) {
                 valueLabelDisplay='auto'
                 onChange={handleBrushSizeChange}
             />
-
+            <span>Brush Size</span>
         </div>
     );
 }
