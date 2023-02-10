@@ -1,6 +1,5 @@
 import ColorMenu from "./ColorMenu";
 import PenMenu from "./PenMenu";
-import ShapeMenu from "./ShapeMenu";
 
 function ToolbarMenu({ menu, handleToolChange }) {
     let content;
@@ -8,10 +7,6 @@ function ToolbarMenu({ menu, handleToolChange }) {
     switch (menu) {
         case "pen":
             content = <PenMenu handleToolChange={handleToolChange} />;
-            break;
-            
-        case "shape":
-            content = <ShapeMenu handleToolChange={handleToolChange} />;
             break;
 
         case "color":

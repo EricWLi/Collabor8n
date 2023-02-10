@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pencil, Eraser, Square, Palette, ArrowCounterclockwise, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
+import { Pencil, Eraser, DashLg, Square, Palette, ArrowCounterclockwise, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 import ToolbarMenu from './ToolbarMenu';
 
 function Toolbar({ handleToolChange, handleUndo }) {
@@ -28,7 +28,7 @@ function Toolbar({ handleToolChange, handleUndo }) {
         <div className='toolbar'>
           <div className='toolbar-item tool-pencil' onClick={() => handleMenuClick('pen')}><Pencil /></div>
           <div className='toolbar-item tool-eraser' onClick={handleToolChange}><Eraser /></div>
-          <div className='toolbar-item tool-square' onClick={() => handleMenuClick('shape')}><Square /></div>
+          {/* <div className='toolbar-item tool-line' onClick={() => handleToolChange('line')}><DashLg /></div> */}
           <div className='toolbar-item tool-palette' onClick={() => handleMenuClick('color')}><Palette /></div>
           <div className='toolbar-item tool-undo' onClick={handleUndo}><ArrowCounterclockwise /></div>
           <div className='toolbar-item tool-collapse' onClick={toggleToolbar}><ChevronLeft /></div>
