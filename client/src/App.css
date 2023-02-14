@@ -83,3 +83,9 @@ body {
 .toolbar-menu-color button:hover {
   transform: scale(1.2);
 }
+
+.chat-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
