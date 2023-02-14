@@ -1,7 +1,10 @@
 import { useState, useEffect, createContext } from 'react';
+import io from 'socket.io-client';
 import Canvas from './Canvas';
+import ChatBox from './ChatBox';
 import Toolbar from './Toolbar';
 
+export const socket = io();
 export const ToolContext = createContext(null);
 
 function Whiteboard() {
@@ -47,9 +50,12 @@ function Whiteboard() {
   return (
     <div className='whiteboard-container'>
       <Canvas width={width} height={height} tool={tool} strokes={strokes} updateStrokes={updateStrokes} />
+
       <ToolContext.Provider value={tool}>
         <Toolbar handleToolChange={handleToolChange} handleUndo={handleUndoStroke} />
       </ToolContext.Provider>
+
+      <ChatBox />
     </div>
   );
 }

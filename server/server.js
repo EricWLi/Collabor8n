@@ -1,3 +1,5 @@
+const path = require('node:path');
+
 const express = require('express');
 const { Server } = require("socket.io");
 
@@ -9,12 +11,10 @@ const io = new Server(server, {
         origin: '*'
     }
 });
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8080;
 const board = Array(null);
 
-app.get('/', (req, res) => {
-    res.send('Hello!');
-});
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 io.on('connection', (socket) => {
     console.log('A client connected.');
@@ -26,7 +26,6 @@ io.on('connection', (socket) => {
     socket.on('drawing', (drawing) => {
         board.push(drawing);
         socket.broadcast.emit('drawing', drawing);
-        console.log(board);
     })
 })
 

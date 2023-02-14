@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef, useContext } from 'react';
-import io from 'socket.io-client';
-
-export const socket = io('http://localhost:8000');
+import { socket } from './Whiteboard';
 
 function Canvas({ width, height, tool, strokes, updateStrokes }) {
   const [mouseDown, setMouseDown] = useState(false);
@@ -79,12 +77,16 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
   }
 
   function handleMouseDown(event) {
+    
     // Ignore right and middle clicks
-    if (event.button !== 0) {
+    if (event.button !== 0 && event.type !== 'touchstart') {
       return;
     }
 
-    addPoint(event.clientX, event.clientY);
+    const x = event.clientX ? event.clientX : event.touches[0].clientX;
+    const y = event.clientY ? event.clientY : event.touches[0].clientY;
+
+    addPoint(x, y);
     setMouseDown(true);
   }
 
@@ -100,7 +102,10 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
       return;
     }
 
-    addPoint(event.clientX, event.clientY);
+    const x = event.clientX ? event.clientX : event.touches[0].clientX;
+    const y = event.clientY ? event.clientY : event.touches[0].clientY;
+
+    addPoint(x, y);
   }
 
   return (
@@ -111,8 +116,11 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
         width={width} 
         height={height}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleMouseDown}
         onMouseUp={handleMouseUp}
+        onTouchEnd={handleMouseUp}
         onMouseMove={handleMouseMove}
+        onTouchMove={handleMouseMove}
       >
       </canvas>
     </div>

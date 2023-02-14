@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pencil, Eraser, DashLg, Square, Palette, ArrowCounterclockwise, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
+import { Pencil, Eraser, Palette, ArrowCounterclockwise, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 import ToolbarMenu from './ToolbarMenu';
 
 function Toolbar({ handleToolChange, handleUndo }) {
