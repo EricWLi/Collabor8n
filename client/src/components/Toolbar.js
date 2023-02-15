@@ -19,6 +19,15 @@ function Toolbar({ handleToolChange, handleUndo }) {
     setCurrentMenu((selected === currentMenu) ? null : selected);
   }
 
+  function handlePenClick() {
+    handleToolChange({ name: 'pen' });
+    handleMenuClick('pen');
+  }
+
+  function handleEraserClick() {
+    handleToolChange({ name: 'eraser' });
+  }
+
   let content;
 
   if (open) {
@@ -26,8 +35,8 @@ function Toolbar({ handleToolChange, handleUndo }) {
     content = (
       <div className='toolbar-container'>
         <div className='toolbar'>
-          <div className='toolbar-item tool-pencil' onClick={() => handleMenuClick('pen')}><Pencil /></div>
-          <div className='toolbar-item tool-eraser' onClick={handleToolChange}><Eraser /></div>
+          <div className='toolbar-item tool-pencil' onClick={handlePenClick}><Pencil /></div>
+          <div className='toolbar-item tool-eraser' onClick={handleEraserClick}><Eraser /></div>
           {/* <div className='toolbar-item tool-line' onClick={() => handleToolChange('line')}><DashLg /></div> */}
           <div className='toolbar-item tool-palette' onClick={() => handleMenuClick('color')}><Palette /></div>
           <div className='toolbar-item tool-undo' onClick={handleUndo}><ArrowCounterclockwise /></div>

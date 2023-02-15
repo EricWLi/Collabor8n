@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { ToolContext } from './Whiteboard';
 
 function ColorMenu({ handleToolChange }) {

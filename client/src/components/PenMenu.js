@@ -5,9 +5,9 @@ import { ToolContext } from './Whiteboard';
 function PenMenu({ handleToolChange }) {
     const tool = useContext(ToolContext);
 
-    function handleBrushSizeChange(event, newValue) {
+    function handleSizeChange(event, newValue) {
         handleToolChange({
-            brushSize: newValue
+            size: newValue
         });
     }
 
@@ -15,11 +15,11 @@ function PenMenu({ handleToolChange }) {
         <div className="toolbar-menu-pen">
             <Slider 
                 size='small' 
-                value={tool.brushSize} 
+                value={tool.size} 
                 min={1} 
                 max={24}
                 valueLabelDisplay='auto'
-                onChange={handleBrushSizeChange}
+                onChange={handleSizeChange}
             />
             <span>Thickness</span>
         </div>

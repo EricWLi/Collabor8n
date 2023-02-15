@@ -26,7 +26,11 @@ io.on('connection', (socket) => {
     socket.on('drawing', (drawing) => {
         board.push(drawing);
         socket.broadcast.emit('drawing', drawing);
-    })
+    });
+
+    socket.on('resync', () => {
+        socket.emit('resync', board);
+    });
 })
 
 server.listen(port, () => {

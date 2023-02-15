@@ -12,8 +12,8 @@ function Whiteboard() {
   const [height, setHeight] = useState(window.innerHeight);
   const [strokes, setStrokes] = useState([]);
   const [tool, setTool] = useState({
-    tool: 'pen',
-    brushSize: 3,
+    name: 'pen',
+    size: 3,
     color: '#000000'
   });
 

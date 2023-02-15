@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { socket } from './Whiteboard';
 
 function Canvas({ width, height, tool, strokes, updateStrokes }) {
@@ -67,12 +67,16 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
 
     setCurrStroke({
       color: tool.color,
-      width: tool.brushSize,
+      width: tool.size,
       points: [...points, { x: transformedX, y: transformedY }]
     });
   }
 
   function addStroke(stroke) {
+    if (!stroke) {
+      return;
+    }
+
     updateStrokes(prevStrokes => [...prevStrokes, stroke]);
   }
 
@@ -86,13 +90,19 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
     const x = event.clientX ? event.clientX : event.touches[0].clientX;
     const y = event.clientY ? event.clientY : event.touches[0].clientY;
 
-    addPoint(x, y);
+    if (tool.name === 'pen') {
+      addPoint(x, y);  
+    }
+
     setMouseDown(true);
   }
 
   function handleMouseUp() {
-    addStroke(currStroke);
-    socket.emit('drawing', currStroke);
+    if (tool.name === 'pen') {
+      addStroke(currStroke);
+      socket.emit('drawing', currStroke);
+    }
+    
     setCurrStroke(null);
     setMouseDown(false);
   }
@@ -105,7 +115,9 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
     const x = event.clientX ? event.clientX : event.touches[0].clientX;
     const y = event.clientY ? event.clientY : event.touches[0].clientY;
 
-    addPoint(x, y);
+    if (tool.name === 'pen') {
+      addPoint(x, y);
+    }
   }
 
   return (
