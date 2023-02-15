@@ -25,6 +25,17 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
     }
   });
 
+  function applySelectedTool(event) {
+    const x = event.clientX ? event.clientX : event.touches[0].clientX;
+    const y = event.clientY ? event.clientY : event.touches[0].clientY;
+
+    if (tool.name === 'pen') {
+      addPoint(x, y);
+    } else if (tool.name === 'eraser') {
+      erase(x, y);
+    }
+  }
+
   function draw(stroke) {
     if (!stroke || !stroke.points) {
       return;
@@ -50,6 +61,24 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
     ctx.stroke();
+  }
+
+  function erase(x, y) {
+    if (!strokes) {
+      return;
+    }
+
+    var nextStrokes = strokes.slice();
+
+    strokes.forEach((stroke, i) => {
+      stroke.points.forEach((pt) => {
+        if (x < pt.x + 10 && x > pt.x - 10 && y < pt.y + 10 && y > pt.y - 10) {
+          nextStrokes.splice(i, 1);
+          updateStrokes(nextStrokes);
+          return;
+        }
+      });
+    });
   }
 
   function addPoint(x, y) {
@@ -81,19 +110,12 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
   }
 
   function handleMouseDown(event) {
-    
     // Ignore right and middle clicks
     if (event.button !== 0 && event.type !== 'touchstart') {
       return;
     }
 
-    const x = event.clientX ? event.clientX : event.touches[0].clientX;
-    const y = event.clientY ? event.clientY : event.touches[0].clientY;
-
-    if (tool.name === 'pen') {
-      addPoint(x, y);  
-    }
-
+    applySelectedTool(event);
     setMouseDown(true);
   }
 
@@ -112,12 +134,7 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
       return;
     }
 
-    const x = event.clientX ? event.clientX : event.touches[0].clientX;
-    const y = event.clientY ? event.clientY : event.touches[0].clientY;
-
-    if (tool.name === 'pen') {
-      addPoint(x, y);
-    }
+    applySelectedTool(event);
   }
 
   return (

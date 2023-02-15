@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Pencil, Eraser, Palette, ArrowCounterclockwise, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 import ToolbarMenu from './ToolbarMenu';
+import { ToolContext } from './Whiteboard';
 
 function Toolbar({ handleToolChange, handleUndo }) {
   const [open, setOpen] = useState(true);
   const [currentMenu, setCurrentMenu] = useState(null);
+  const tool = useContext(ToolContext);
 
   function toggleToolbar() {
     if (open) {
@@ -20,8 +22,11 @@ function Toolbar({ handleToolChange, handleUndo }) {
   }
 
   function handlePenClick() {
+    if (tool.name === 'pen') {
+      handleMenuClick('pen');
+    }
+
     handleToolChange({ name: 'pen' });
-    handleMenuClick('pen');
   }
 
   function handleEraserClick() {
@@ -37,7 +42,6 @@ function Toolbar({ handleToolChange, handleUndo }) {
         <div className='toolbar'>
           <div className='toolbar-item tool-pencil' onClick={handlePenClick}><Pencil /></div>
           <div className='toolbar-item tool-eraser' onClick={handleEraserClick}><Eraser /></div>
-          {/* <div className='toolbar-item tool-line' onClick={() => handleToolChange('line')}><DashLg /></div> */}
           <div className='toolbar-item tool-palette' onClick={() => handleMenuClick('color')}><Palette /></div>
           <div className='toolbar-item tool-undo' onClick={handleUndo}><ArrowCounterclockwise /></div>
           <div className='toolbar-item tool-collapse' onClick={toggleToolbar}><ChevronLeft /></div>
