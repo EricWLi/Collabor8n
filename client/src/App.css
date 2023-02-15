@@ -84,8 +84,48 @@ body {
   transform: scale(1.2);
 }
 
-.chat-button {
+.chatbox {
+  background-color: white;
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 75px;
+  right: 15px;
+  width: 350px;
+  height: calc(85% - 75px);
+}
+
+.chatbox-messages {
+  height: 85%;
+  overflow-y: auto;
+}
+
+.chatbox-msgbox {
+  position: relative;
+  height: 10%;
+  margin: 8px;
+}
+
+.chatbox-msgbox textarea {
+  width: 100%;
+  height: 100%;
+}
+
+.chat-button {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+}
+
+.chat-msg .name {
+  color: #666;
+  font-size: 13px;
+  position: relative;
+  margin: 12px 0 4px 8px;
+}
+
+.chat-msg .message {
+  background-color: #f8f8f8;
+  font-size: 15px;
+  max-width: 90%;
+  width: auto;
+  padding: 10px 14px;
 }
