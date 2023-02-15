@@ -12,24 +12,23 @@ const io = new Server(server, {
     }
 });
 const port = process.env.PORT || 8080;
-const board = Array(null);
+var board = Array(null);
 
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 io.on('connection', (socket) => {
     console.log('A client connected.');
 
-    for (let line of board) {
-        socket.emit('drawing', line);
-    }
+    socket.emit('resync', board);
 
     socket.on('drawing', (drawing) => {
         board.push(drawing);
         socket.broadcast.emit('drawing', drawing);
     });
 
-    socket.on('resync', () => {
-        socket.emit('resync', board);
+    socket.on('resyncall', (canvas) => {
+        board = canvas;
+        socket.broadcast.emit('resync', canvas);
     });
 })
 

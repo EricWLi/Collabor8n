@@ -44,7 +44,9 @@ function Whiteboard() {
   }
 
   function handleUndoStroke() {
-    setStrokes([...strokes.slice(0, -1)]);
+    const nextStrokes = [...strokes.slice(0, -1)];
+    socket.emit('resyncall', nextStrokes);
+    setStrokes(nextStrokes);
   }
 
   return (

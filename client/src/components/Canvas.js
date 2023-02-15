@@ -15,6 +15,13 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
     strokes.forEach(stroke => draw(stroke));
 
     socket.on('connect', () => console.log('Socket connected.'));
+
+    socket.on('resync', (strokes) => {
+      // Clear existing lines for resynchronization.
+      updateStrokes(prevStrokes => []);
+      strokes.forEach(stroke => addStroke(stroke));
+    })
+
     socket.on('drawing', (stroke) => {
       addStroke(stroke);
     });
@@ -123,6 +130,8 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
     if (tool.name === 'pen') {
       addStroke(currStroke);
       socket.emit('drawing', currStroke);
+    } else if (tool.name === 'eraser') {
+      socket.emit('resyncall', strokes);
     }
     
     setCurrStroke(null);
