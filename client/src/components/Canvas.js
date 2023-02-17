@@ -9,7 +9,7 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
 
-    // Clear canvas and redraw, since bitmap elements keep their content even on re-render.
+    // Clear canvas and redraw, since canvas elements keep their content even on re-render.
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     draw(currStroke);
     strokes.forEach(stroke => draw(stroke));
