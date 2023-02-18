@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const jwtUtil = require('../lib/jwtUtil');
+const jwtAuthentication = require('../middlewares/jwtAuth');
 const User = require('../models/User');
-
 
 // POST /api/users/login
 router.post('/login', async (req, res) => {
@@ -20,11 +20,15 @@ router.post('/login', async (req, res) => {
             return;
         }
 
-        const token = jwtUtil.createToken({ id: user._id }, { expiresIn: '1d' });
+        const token = jwtUtil.createToken(
+            { userId: user._id }, 
+            { expiresIn: '1d' }
+        );
 
         res
-            .cookie('token', token, { httpOnly: true })
+            .cookie('token', token, { httpOnly: true, maxAge: 86400000 })
             .json({ token });
+            
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -56,5 +60,10 @@ router.post('/register', async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 });
+
+// POST /api/users/logout
+router.post('/logout', jwtAuthentication, (req, res) => {
+    res.clearCookie('token').send();
+})
 
 module.exports = router;
