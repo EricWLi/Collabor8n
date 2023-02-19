@@ -22,11 +22,14 @@ var board = Array(null);
 app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(express.json());
 app.use(routers);
+app.use('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
 io.on('connection', (socket) => {
     console.log('A client connected.');
 
-    socket.emit('resync', board);
+    // socket.emit('resync', board);
 
     socket.on('drawing', (drawing) => {
         board.push(drawing);
