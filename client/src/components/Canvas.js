@@ -77,15 +77,15 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
 
     var nextStrokes = strokes.slice();
 
-    strokes.forEach((stroke, i) => {
-      stroke.points.forEach((pt) => {
+    for (let i = 0; i < strokes.length; i++) {
+      for (let pt of strokes[i].points) {
         if (x < pt.x + 10 && x > pt.x - 10 && y < pt.y + 10 && y > pt.y - 10) {
           nextStrokes.splice(i, 1);
           updateStrokes(nextStrokes);
           return;
         }
-      });
-    });
+      }
+    }
   }
 
   function addPoint(x, y) {
