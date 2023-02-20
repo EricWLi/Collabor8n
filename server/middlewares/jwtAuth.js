@@ -7,6 +7,10 @@ const jwtAuthentication = (options = { allowGuests: false }) => {
             const authorizationHeader = req.get('Authorization');
         
             if (!authorizationHeader) {
+                if (options.allowGuests) {
+                    return next();
+                }
+
                 throw new UnauthorizedError('Authorization token is missing.');
             }
         
@@ -23,11 +27,7 @@ const jwtAuthentication = (options = { allowGuests: false }) => {
             req.jwt = jwtUtil.validateToken(token);
         } catch (err) {
             if (err instanceof UnauthorizedError) {
-                if (options.allowGuests) {
-                    return next();
-                }
-
-                return res.status(401).json({ error: `Unauthorized: ${err.message}` });
+                return res.status(401).json({ message: `Unauthorized: ${err.message}` });
             }
         }
     

@@ -31,10 +31,28 @@ router.get('/', jwtAuthentication(), async (req, res) => {
 
 // GET /api/canvases/{canvasId}
 router.get('/:canvasId', jwtAuthentication({ allowGuests: true }), async (req, res) => {
-    const canvas = await Canvas.findOne({
-        _id: req.params.canvasId,
-        $or: [ { owner: req.jwt?.userId }, { collaborators: req.jwt?.userId }, { allowGuests: true } ]
-    });
+    const canvas = await Canvas.findById(req.params.canvasId);
+
+    if (canvas && !canvas.allowGuests) {
+        if (req.jwt) {
+            // User is logged in.
+            // Return HTTP 403 Forbidden if the user does not have access to the resource.
+
+            const containsUserId = (objId) => objId?.equals(req.jwt.userId);
+
+            if (
+                !containsUserId(canvas.owner) &&
+                !canvas.collaborators.some(containsUserId)
+            ) {
+                return res.status(403).json({ message: 'You do not have access to this canvas. Please request permissions from the owner of this canvas.' });
+            }
+
+        } else {
+            // User is not logged in, and the canvas is not public.
+            // Return HTTP 401, redirect user to login.
+            return res.status(401).json({ message: 'The requested canvas is not public. Please login and try again.' });
+        }
+    }
 
     res.json(canvas);
 });
