@@ -17,7 +17,7 @@ const io = new Server(server, {
     }
 });
 
-var board = Array(null);
+const Canvas = require('./models/Canvas');
 
 app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(express.json());
@@ -27,19 +27,31 @@ app.use('*', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    console.log('A client connected.');
+    console.log(`Client ${socket.id} connected.`);
 
-    // socket.emit('resync', board);
+    socket.on('join', (roomId) => {
+        console.log(`Client ${socket.id} joined room ${roomId}.`);
+        socket.join(roomId);
 
-    socket.on('drawing', (drawing) => {
-        board.push(drawing);
-        socket.broadcast.emit('drawing', drawing);
+        socket.on('drawing', async (drawing) => {
+            if (!drawing) {
+                return;
+            }
+
+            await Canvas.updateOne({ _id: roomId }, { $push: { objects: drawing } });
+            socket.broadcast.to(roomId).emit('drawing', drawing);
+        });
+
+        socket.on('resyncall', async (canvas) => {
+            await Canvas.updateOne({ _id: roomId }, { objects: canvas });
+            socket.broadcast.to(roomId).emit('resync', canvas);
+        });
     });
 
-    socket.on('resyncall', (canvas) => {
-        board = canvas;
-        socket.broadcast.emit('resync', canvas);
-    });
+    socket.on('leave', (id) => {
+        console.log(`Client ${socket.id} left room ${id}.`);
+        socket.leave(id);
+    })
 })
 
 server.listen(port, () => {

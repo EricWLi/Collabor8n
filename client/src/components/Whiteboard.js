@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import io from 'socket.io-client';
 import Canvas from './Canvas';
 import ChatBox from './ChatBox';
@@ -8,14 +9,24 @@ export const socket = io();
 export const ToolContext = createContext(null);
 
 function Whiteboard() {
+  const room = useLoaderData();
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
-  const [strokes, setStrokes] = useState([]);
+  const [strokes, setStrokes] = useState(room ? room.objects : []);
   const [tool, setTool] = useState({
     name: 'pen',
     size: 3,
     color: '#000000'
   });
+
+  useEffect(() => {
+    if (room) {
+      console.log('Joining room', room._id);
+      socket.emit('join', room._id);
+
+      return () => socket.emit('leave', room._id);
+    }
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {

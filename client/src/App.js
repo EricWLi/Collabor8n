@@ -8,10 +8,10 @@ const router = createBrowserRouter([
     element: <Whiteboard />
   },
   {
-    path: ':canvasId',
+    path: ':roomId',
     element: <Whiteboard />,
     loader: ({ params }) => {
-      return fetch(`/api/canvases/${params.canvasId}`)
+      return fetch(`/api/canvases/${params.roomId}`)
     }
   }
 ]);

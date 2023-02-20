@@ -6,9 +6,11 @@ const CanvasSchema = new Schema({
     collaborators: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     allowGuests: { type: Boolean, default: false },
     objects: [{
+            _id: false,
             color: String,
             width: Number,
             points: [{
+                _id: false,
                 x: Number,
                 y: Number
             }],
