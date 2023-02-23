@@ -7,7 +7,7 @@ function LoginPage() {
     return (
         <Container>
           <Box className='login-content'>
-            <LogoAvatar />
+            <LogoAvatar pageName='Login' />
 
             <Box component="form" onSubmit={null} noValidate sx={{ mt: 1 }}>
               <TextField

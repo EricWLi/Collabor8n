@@ -1,17 +1,24 @@
-import { Box, SvgIcon, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { ReactComponent as Logo } from '../assets/logoIcon.svg';
+import { ReactComponent as Logo } from '../assets/logo-vertical.svg';
 
-function LogoAvatar() {
+function LogoAvatar({ pageName }) {
     return (
         <>
-            <Link to='/'>
-              <SvgIcon className='logoIcon' component={Logo} inheritViewBox />
-            </Link>
+            <Box
+                m={2}
+                textAlign='center'
+            >
+                <Link to='/'>
+                    <Logo height='128px' />
+                </Link>
+            </Box>
 
-            <Typography component="h1" variant="h4">
-                Collabor8n
-            </Typography>
+            { pageName &&
+                <Typography component="h1" variant="h4">
+                    { pageName }
+                </Typography>
+            }
         </>
     )
 }
