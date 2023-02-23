@@ -1,24 +1,33 @@
 import './App.css';
-import Whiteboard from './components/Whiteboard';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Whiteboard />
-  },
-  {
-    path: ':roomId',
-    element: <Whiteboard />,
-    loader: ({ params }) => {
-      return fetch(`/api/canvases/${params.roomId}`)
-    }
-  }
-]);
+import Whiteboard from './components/Whiteboard';
+import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage';
+import canvasLoader from './loaders/canvasLoader';
+import SignupPage from './pages/SignupPage';
 
 function App() {
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <HomePage />
+    },
+    {
+      path: '/login',
+      element: <LoginPage />
+    },
+    {
+      path: '/signup',
+      element: <SignupPage />
+    },
+    {
+      path: '/canvases/:canvasId',
+      element: <Whiteboard />,
+      loader: canvasLoader
+    }
+  ]);
+
   return (
-    // <Whiteboard />
     <RouterProvider router={router} />
   );
 }

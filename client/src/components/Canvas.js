@@ -18,7 +18,7 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
 
     socket.on('resync', (strokes) => {
       // Clear existing lines for resynchronization.
-      updateStrokes(prevStrokes => []);
+      updateStrokes([]);
       strokes.forEach(stroke => addStroke(stroke));
     })
 

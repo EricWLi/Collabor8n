@@ -1,0 +1,16 @@
+.logoIcon {
+    font-size: 72px !important;
+    margin: 8px;
+}
+
+.login-content {
+    margin: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-button {
+    margin-top: 24px !important;
+    margin-bottom: 16px !important;
+}

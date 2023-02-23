@@ -33,7 +33,9 @@ router.get('/', jwtAuthentication(), async (req, res) => {
 router.get('/:canvasId', jwtAuthentication({ allowGuests: true }), async (req, res) => {
     const canvas = await Canvas.findById(req.params.canvasId);
 
-    if (canvas && !canvas.allowGuests) {
+    if (!canvas) {
+        return res.status(404).json({ message: 'This canvas does not exist.' });
+    } else if (!canvas.allowGuests) {
         if (req.jwt) {
             // User is logged in.
             // Return HTTP 403 Forbidden if the user does not have access to the resource.
@@ -50,7 +52,7 @@ router.get('/:canvasId', jwtAuthentication({ allowGuests: true }), async (req, r
         } else {
             // User is not logged in, and the canvas is not public.
             // Return HTTP 401, redirect user to login.
-            return res.status(401).json({ message: 'The requested canvas is not public. Please login and try again.' });
+            return res.status(401).json({ message: 'The requested canvas is not public.' });
         }
     }
 

@@ -1,45 +1,25 @@
-import { useState, useEffect, createContext } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useState, createContext } from 'react';
 import io from 'socket.io-client';
+import NavBar from './NavBar'
 import Canvas from './Canvas';
 import ChatBox from './ChatBox';
 import Toolbar from './Toolbar';
+import useWindowResize from '../hooks/useWindowResize';
+import { useLoaderData } from 'react-router-dom';
+import ToastNotification from './ToastNotification';
 
 export const socket = io();
 export const ToolContext = createContext(null);
 
 function Whiteboard() {
-  const room = useLoaderData();
-  const [width, setWidth] = useState(window.innerWidth);
-  const [height, setHeight] = useState(window.innerHeight);
-  const [strokes, setStrokes] = useState(room ? room.objects : []);
+  const board = useLoaderData();
+  const [strokes, setStrokes] = useState(board && board.objects ? board.objects : []);
+  const { width, height } = useWindowResize();
   const [tool, setTool] = useState({
     name: 'pen',
     size: 3,
     color: '#000000'
   });
-
-  useEffect(() => {
-    if (room) {
-      console.log('Joining room', room._id);
-      socket.emit('join', room._id);
-
-      return () => socket.emit('leave', room._id);
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    }
-  })
 
   /* Handlers */
 
@@ -62,6 +42,7 @@ function Whiteboard() {
 
   return (
     <div className='whiteboard-container'>
+      <NavBar />
       <Canvas width={width} height={height} tool={tool} strokes={strokes} updateStrokes={updateStrokes} />
 
       <ToolContext.Provider value={tool}>
@@ -69,6 +50,8 @@ function Whiteboard() {
       </ToolContext.Provider>
 
       <ChatBox />
+
+      <ToastNotification board={board} />
     </div>
   );
 }
