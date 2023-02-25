@@ -1,8 +1,18 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from '../assets/logo-vertical.svg';
 
 function LogoAvatar({ pageName }) {
+  let header;
+
+  if (pageName) {
+    header = (
+      <Typography component="h1" variant="h5" mt={3}>
+        { pageName }
+      </Typography>
+  );
+  }
+
     return (
         <>
             <Box
@@ -14,11 +24,9 @@ function LogoAvatar({ pageName }) {
                 </Link>
             </Box>
 
-            { pageName &&
-                <Typography component="h1" variant="h4">
-                    { pageName }
-                </Typography>
-            }
+            <Divider flexItem />
+
+            {header}
         </>
     )
 }

@@ -22,7 +22,7 @@ function ChatBox() {
             }
 
             <div className='chat-button'>
-                <Fab onClick={() => setOpen(!open)}>
+                <Fab color='primary' onClick={() => setOpen(!open)}>
                     {open ? 
                         <ArrowDown size={24} /> : 
                         <Badge color='primary' badgeContent={0}>

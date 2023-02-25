@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Button, TextField } from '@mui/material';
+import { Box, Container, Button, TextField, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
 import LogoAvatar from '../components/LogoAvatar';
 import '../assets/style/LoginPage.css';
@@ -8,7 +8,7 @@ function LoginPage() {
         <Container>
           <Box className='login-content'>
             <LogoAvatar pageName='Login' />
-
+            
             <Box component="form" onSubmit={null} noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"

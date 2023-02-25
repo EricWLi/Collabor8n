@@ -1,5 +1,6 @@
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Whiteboard from './components/Whiteboard';
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage';
@@ -27,8 +28,22 @@ function App() {
     }
   ]);
 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#FD7547',
+        contrastText: '#fff',
+      },
+      secondary: {
+        main: '#2196F3'
+      }
+    }
+  });
+
   return (
-    <RouterProvider router={router} />
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   );
 }
 
