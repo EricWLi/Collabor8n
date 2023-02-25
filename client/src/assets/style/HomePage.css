@@ -1,0 +1,26 @@
+.logo {
+    min-width: 230px;
+    height: 51px;
+}
+
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 24px;
+    gap: 64px;
+    height: 80px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+}
+
+.navbar-buttons {
+    display: flex;
+    flex: none;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+}

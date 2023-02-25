@@ -1,5 +1,5 @@
-import { Box, Container, Button, TextField, Divider } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box, Container, Button, TextField, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import LogoAvatar from '../components/LogoAvatar';
 import '../assets/style/LoginPage.css';
 
@@ -42,7 +42,7 @@ function LoginPage() {
               </Button>
 
               <Box textAlign='center'>
-                <Link to='/signup'>
+                <Link component={RouterLink} to='/signup'>
                   Don't have an account? Sign Up
                 </Link>
               </Box>
