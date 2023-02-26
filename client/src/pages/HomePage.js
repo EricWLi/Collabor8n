@@ -2,20 +2,39 @@ import { Container, Box, Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { ReactComponent as LogoHorizontal } from '../assets/logo-horizontal.svg';
 import { ReactComponent as HeroImage } from '../assets/hero-image.svg';
-import '../assets/style/HomePage.css'
 
 function HomePage() {
   return (
     <Container>
       <Box
-        className="navbar"
         component="nav"
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '8px 24px',
+          gap: '64px',
+          height: '80px',
+          left: '0px',
+          right: '0px',
+          top: '0px'
+        }}
       >
         <Link to="/">
-          <LogoHorizontal className="logo" />
+          <LogoHorizontal style={{ minWidth: '230px', height: '51px' }} />
         </Link>
 
-        <Box className="navbar-buttons">
+        <Box
+          sx={{
+            display: 'flex',
+            flex: 'none',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            padding: '0px',
+            gap: '16px'
+          }}
+        >
           <Button
             variant="contained"
             color="secondary"
@@ -39,7 +58,6 @@ function HomePage() {
       </Box>
 
       <Box
-        className="hero"
         sx={{
           display: 'flex',
           flexDirection: 'column',

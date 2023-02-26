@@ -7,7 +7,12 @@ function LogoAvatar({ pageName }) {
 
   if (pageName) {
     header = (
-      <Typography component="h1" variant="h5" mt={3}>
+      <Typography
+        component="h1"
+        variant="h5"
+        mt={3}
+        textAlign="center"
+      >
         {pageName}
       </Typography>
     );

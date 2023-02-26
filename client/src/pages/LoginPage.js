@@ -1,12 +1,18 @@
 import { Box, Container, Button, TextField, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import LogoAvatar from '../components/LogoAvatar';
-import '../assets/style/LoginPage.css';
 
 function LoginPage() {
   return (
     <Container>
-      <Box className="login-content">
+      <Box
+        sx={{
+          margin: '8px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
         <LogoAvatar pageName="Login" />
 
         <Box component="form" onSubmit={null} noValidate sx={{ mt: 1 }}>
@@ -33,7 +39,10 @@ function LoginPage() {
           />
 
           <Button
-            className="login-button"
+            sx={{
+              marginTop: '24px',
+              marginBottom: '24px'
+            }}
             type="submit"
             fullWidth
             variant="contained"
