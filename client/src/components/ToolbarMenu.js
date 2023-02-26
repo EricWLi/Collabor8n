@@ -2,26 +2,26 @@ import ColorMenu from "./ColorMenu";
 import PenMenu from "./PenMenu";
 
 function ToolbarMenu({ menu, handleToolChange }) {
-    let content;
-    
-    switch (menu) {
-        case "pen":
-            content = <PenMenu handleToolChange={handleToolChange} />;
-            break;
+  let content;
 
-        case "color":
-            content = <ColorMenu handleToolChange={handleToolChange} />;
-            break;
+  switch (menu) {
+    case "pen":
+      content = <PenMenu handleToolChange={handleToolChange} />;
+      break;
 
-        default:
-            return;
-    }
+    case "color":
+      content = <ColorMenu handleToolChange={handleToolChange} />;
+      break;
 
-    return (
-        <div className="toolbar-menu">
-            {content}
-        </div>
-    );
+    default:
+      return;
+  }
+
+  return (
+    <div className="toolbar-menu">
+      {content}
+    </div>
+  );
 }
 
 export default ToolbarMenu;

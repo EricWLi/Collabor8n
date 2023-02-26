@@ -147,9 +147,9 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
   }
 
   return (
-    <div className='canvas-container'>
+    <div className="canvas-container">
       <canvas 
-        className='canvas'
+        className="canvas"
         ref={canvasRef}
         width={width} 
         height={height}

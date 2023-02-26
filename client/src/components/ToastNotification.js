@@ -30,8 +30,8 @@ function ToastNotification({ board }) {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       autoHideDuration={duration}
     >
-      <Alert severity={severity} variant='filled'>
-        { message } { isUnauthorized && <Link to='/login' className='router-link'>Login</Link>}
+      <Alert severity={severity} variant="filled">
+        {message} {isUnauthorized && <Link to="/login" className="router-link">Login</Link>}
       </Alert>
     </Snackbar>
   );

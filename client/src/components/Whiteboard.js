@@ -41,7 +41,7 @@ function Whiteboard() {
   }
 
   return (
-    <div className='whiteboard-container'>
+    <div className="whiteboard-container">
       <NavBar />
       <Canvas width={width} height={height} tool={tool} strokes={strokes} updateStrokes={updateStrokes} />
 

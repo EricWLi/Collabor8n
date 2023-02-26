@@ -38,13 +38,13 @@ function Toolbar({ handleToolChange, handleUndo }) {
   if (open) {
     // Show sidebar menu.
     content = (
-      <div className='toolbar-container'>
-        <div className='toolbar'>
-          <div className='toolbar-item tool-pencil' onClick={handlePenClick}><Pencil /></div>
-          <div className='toolbar-item tool-eraser' onClick={handleEraserClick}><Eraser /></div>
-          <div className='toolbar-item tool-palette' onClick={() => handleMenuClick('color')}><Palette /></div>
-          <div className='toolbar-item tool-undo' onClick={handleUndo}><ArrowCounterclockwise /></div>
-          <div className='toolbar-item tool-collapse' onClick={toggleToolbar}><ChevronLeft /></div>
+      <div className="toolbar-container">
+        <div className="toolbar">
+          <div className="toolbar-item tool-pencil" onClick={handlePenClick}><Pencil /></div>
+          <div className="toolbar-item tool-eraser" onClick={handleEraserClick}><Eraser /></div>
+          <div className="toolbar-item tool-palette" onClick={() => handleMenuClick('color')}><Palette /></div>
+          <div className="toolbar-item tool-undo" onClick={handleUndo}><ArrowCounterclockwise /></div>
+          <div className="toolbar-item tool-collapse" onClick={toggleToolbar}><ChevronLeft /></div>
         </div>
 
         { currentMenu && <ToolbarMenu menu={currentMenu} handleToolChange={handleToolChange} /> }
@@ -53,8 +53,8 @@ function Toolbar({ handleToolChange, handleUndo }) {
   } else {
     // Hide sidebar menu; show toggle arrow.
     content = (
-      <div className='toolbar-toggle'>
-        <ChevronRight className='toolbar-expand' onClick={toggleToolbar} />
+      <div className="toolbar-toggle">
+        <ChevronRight className="toolbar-expand" onClick={toggleToolbar} />
       </div>
     );
   }

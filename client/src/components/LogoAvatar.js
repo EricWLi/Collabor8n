@@ -8,27 +8,27 @@ function LogoAvatar({ pageName }) {
   if (pageName) {
     header = (
       <Typography component="h1" variant="h5" mt={3}>
-        { pageName }
+        {pageName}
       </Typography>
-  );
+    );
   }
 
-    return (
-        <>
-            <Box
-                m={2}
-                textAlign='center'
-            >
-                <Link to='/'>
-                    <Logo height='128px' />
-                </Link>
-            </Box>
+  return (
+    <>
+      <Box
+        m={2}
+        textAlign="center"
+      >
+        <Link to="/">
+          <Logo height="128px" />
+        </Link>
+      </Box>
 
-            <Divider flexItem />
+      <Divider flexItem />
 
-            {header}
-        </>
-    )
+      {header}
+    </>
+  )
 }
 
 export default LogoAvatar;
