@@ -7,10 +7,11 @@ function LoginPage() {
     <Container>
       <Box
         sx={{
-          margin: '8px',
+          margin: 'auto',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center'
+          alignItems: 'center',
+          maxWidth: '500px'
         }}
       >
         <LogoAvatar pageName="Login" />
