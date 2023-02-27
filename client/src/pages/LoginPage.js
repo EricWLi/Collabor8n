@@ -1,8 +1,22 @@
-import { Box, Container, Button, TextField, Link } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Box, Container, Button, TextField, Link, Typography } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import LogoAvatar from '../components/LogoAvatar';
 
 function LoginPage() {
+  const navigate = useNavigate();
+
+  function handleGuestLogin() {
+      fetch('/api/canvases', { method: 'POST' })
+      .then(res => res.json())
+      .then(data => {
+        navigate(`/canvases/${data._id}`);
+      })
+      .catch(err => {
+        alert('Failed to create new canvas. Please try again later.');
+      });
+  }
+  
+
   return (
     <Container>
       <Box
@@ -52,9 +66,19 @@ function LoginPage() {
           </Button>
 
           <Box textAlign="center">
-            <Link component={RouterLink} to="/signup">
-              Don't have an account? Sign Up
-            </Link>
+            <Typography variant="body1">
+              Don't have an account?
+            </Typography>
+
+            <Button component={RouterLink} to="/signup" variant="text">
+              Sign Up
+            </Button>
+
+            <Typography variant="body2">or</Typography>
+
+            <Button onClick={handleGuestLogin} variant="text" color="secondary">
+              Continue as Guest
+            </Button>
           </Box>
 
         </Box>
