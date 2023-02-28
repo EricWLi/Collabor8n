@@ -2,18 +2,23 @@ import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { AuthProvider } from './contexts/AuthContext';
 import HomePage from './pages/HomePage'
+import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import Whiteboard from './components/Whiteboard';
 import canvasLoader from './loaders/canvasLoader';
-import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   const router = createBrowserRouter([
     {
       path: '/',
       element: <HomePage />
+    },
+    {
+      path: '/dashboard',
+      element: <Dashboard />
     },
     {
       path: '/login',
