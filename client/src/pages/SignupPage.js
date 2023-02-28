@@ -12,7 +12,7 @@ function SignupPage() {
     return () => {
       setError(null);
     }
-  }, []);
+  }, [setError]);
 
   function handleSubmit(event) {
     event.preventDefault();

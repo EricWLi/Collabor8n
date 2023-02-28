@@ -13,7 +13,7 @@ function LoginPage() {
     return () => {
       setError(null);
     }
-  }, []);
+  }, [setError]);
 
   async function handleSubmit(event) {
     event.preventDefault();

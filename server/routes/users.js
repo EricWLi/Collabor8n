@@ -5,6 +5,12 @@ const jwtUtil = require('../lib/jwtUtil');
 const jwtAuthentication = require('../middlewares/jwtAuth');
 const User = require('../models/User');
 
+// GET /api/users/token
+router.get('/token', (req, res) => {
+    const token = { token: req.cookies.token };
+    res.status(200).json(token);
+});
+
 // POST /api/users/login
 router.post('/login', async (req, res) => {
     try {
@@ -62,7 +68,7 @@ router.post('/register', async (req, res) => {
 });
 
 // POST /api/users/logout
-router.post('/logout', jwtAuthentication, (req, res) => {
+router.post('/logout', jwtAuthentication(), (req, res) => {
     res.clearCookie('token').send();
 })
 

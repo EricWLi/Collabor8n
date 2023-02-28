@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const path = require('node:path');
 const express = require('express');
+const cookieParser = require('cookie-parser')
 const http = require('http');
 const { Server } = require("socket.io");
 const mongoose = require('mongoose');
@@ -20,6 +21,7 @@ const io = new Server(server, {
 const Canvas = require('./models/Canvas');
 
 app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(cookieParser());
 app.use(express.json());
 app.use(routers);
 app.use('*', (req, res) => {

@@ -1,11 +1,28 @@
-import { createContext, useContext } from 'react';
-import { useState, useEffect } from 'react';
+import { createContext, useContext, useEffect } from 'react';
+import { useState } from 'react';
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const res = await fetch('/api/users/token');
+        const data = await res.json();
+
+        if (data && data.token) {
+          setUser(data);
+        }
+      } catch {
+        console.log('Error fetching token.');
+      }
+    }
+
+    fetchToken();
+  }, []);
 
   const loginAsGuest = async () => {
     try {
@@ -88,21 +105,21 @@ export function AuthProvider({ children }) {
     }
   }
 
-return (
-  <AuthContext.Provider value={
-    {
-      loginAsGuest,
-      login,
-      signout,
-      signup,
-      user,
-      error,
-      setError
-    }
-  }>
-    {children}
-  </AuthContext.Provider>
-);
+  return (
+    <AuthContext.Provider value={
+      {
+        loginAsGuest,
+        login,
+        signout,
+        signup,
+        user,
+        error,
+        setError
+      }
+    }>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export const useAuthContext = () => useContext(AuthContext);
