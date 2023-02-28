@@ -1,8 +1,33 @@
-import { Box, Container, Button, TextField, Link } from '@mui/material';
+import { useEffect } from 'react';
+import { Box, Container, Button, TextField, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { useAuthContext } from '../contexts/AuthContext';
 import LogoAvatar from '../components/LogoAvatar';
 
 function SignupPage() {
+  const { signup, error, setError } = useAuthContext();
+
+  // Clear error on component unmount
+  useEffect(() => {
+    return () => {
+      setError(null);
+    }
+  }, []);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const user = {
+      firstName: data.get('first-name'),
+      lastName: data.get('last-name'),
+      username: data.get('username'),
+      password: data.get('password'),
+      confirmPassword: data.get('confirm-password')
+    };
+
+    signup(user);
+  }
+
   return (
     <Container>
       <Box
@@ -16,7 +41,7 @@ function SignupPage() {
       >
         <LogoAvatar pageName="Sign Up" />
 
-        <Box component="form" onSubmit={null} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             fullWidth
@@ -27,7 +52,7 @@ function SignupPage() {
             autoFocus
             required
           />
-          
+
           <TextField
             margin="normal"
             fullWidth
@@ -37,7 +62,7 @@ function SignupPage() {
             autoComplete="family-name"
             required
           />
-          
+
           <TextField
             margin="normal"
             fullWidth
@@ -57,7 +82,7 @@ function SignupPage() {
             type="password"
             autoComplete="current-password"
             required
-          /> 
+          />
 
           <TextField
             margin="normal"
@@ -68,6 +93,8 @@ function SignupPage() {
             type="password"
             required
           />
+
+          { error && <Typography color="error">{error}</Typography>}
 
           <Button
             sx={{
@@ -83,7 +110,7 @@ function SignupPage() {
 
           <Box textAlign="center">
             <Link component={RouterLink} to="/login">
-            Have an account? Sign In
+              Have an account? Sign In
             </Link>
           </Box>
 

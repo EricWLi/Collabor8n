@@ -27,7 +27,7 @@ const jwtAuthentication = (options = { allowGuests: false }) => {
             req.jwt = jwtUtil.validateToken(token);
         } catch (err) {
             if (err instanceof UnauthorizedError) {
-                return res.status(401).json({ message: `Unauthorized: ${err.message}` });
+                return res.status(401).json({ error: { message: `Unauthorized: ${err.message}` }});
             }
         }
     

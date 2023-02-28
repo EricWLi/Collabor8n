@@ -11,12 +11,12 @@ router.post('/login', async (req, res) => {
         const user = await User.findOne({ username: req.body.username });
 
         if (!user) {
-            res.status(401).json({ message: `User "${req.body.username}" does not exist.` });
+            res.status(401).json({ error: { message: `User "${req.body.username}" does not exist.` }});
             return;
         }
 
         if (!await user.validatePassword(req.body.password)) {
-            res.status(401).json({ message: 'Incorrect password.' });
+            res.status(401).json({ error: { message: 'Incorrect password.' }});
             return;
         }
 
@@ -30,7 +30,7 @@ router.post('/login', async (req, res) => {
             .json({ token });
             
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(400).json({ error: { message: err.message }});
     }
 });
 
@@ -43,7 +43,7 @@ router.post('/register', async (req, res) => {
         const userExists = await User.findOne({ username: req.body.username });
 
         if (userExists) {
-            res.status(400).json({ message: `User "${userExists.username}" already exists.` });
+            res.status(400).json({ error: { message: `User "${userExists.username}" already exists.` }});
             return;
         }
 
@@ -55,9 +55,9 @@ router.post('/register', async (req, res) => {
         });
 
         await user.save();
-        res.status(201).json({id: user._id});
+        res.status(201).json({ id: user._id });
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(400).json({ error: { message: err.message }});
     }
 });
 

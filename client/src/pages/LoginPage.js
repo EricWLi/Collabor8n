@@ -1,21 +1,34 @@
-import { Box, Container, Button, TextField, Link, Typography } from '@mui/material';
+import { useEffect } from 'react';
+import { Box, Container, Button, TextField, Typography } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../contexts/AuthContext';
 import LogoAvatar from '../components/LogoAvatar';
 
 function LoginPage() {
+  const { loginAsGuest, login, user, error, setError } = useAuthContext();
   const navigate = useNavigate();
 
-  function handleGuestLogin() {
-      fetch('/api/canvases', { method: 'POST' })
-      .then(res => res.json())
-      .then(data => {
-        navigate(`/canvases/${data._id}`);
-      })
-      .catch(err => {
-        alert('Failed to create new canvas. Please try again later.');
-      });
+  // Clear error on component unmount
+  useEffect(() => {
+    return () => {
+      setError(null);
+    }
+  }, []);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const success = await login(data.get('username'), data.get('password'));
+
+    if (success) {
+      navigate('/dashboard');
+    }
   }
-  
+
+  async function handleGuestLogin() {
+    const redirectUrl = await loginAsGuest();
+    navigate(redirectUrl);
+  }
 
   return (
     <Container>
@@ -30,7 +43,7 @@ function LoginPage() {
       >
         <LogoAvatar pageName="Login" />
 
-        <Box component="form" onSubmit={null} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             fullWidth
@@ -52,6 +65,8 @@ function LoginPage() {
             autoComplete="current-password"
             required
           />
+
+          {error && <Typography color="error">{error}</Typography>}
 
           <Button
             sx={{

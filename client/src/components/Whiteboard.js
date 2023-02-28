@@ -1,11 +1,11 @@
 import { useState, createContext } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import io from 'socket.io-client';
 import NavBar from './NavBar'
 import Canvas from './Canvas';
 import ChatBox from './ChatBox';
 import Toolbar from './Toolbar';
 import useWindowResize from '../hooks/useWindowResize';
-import { useLoaderData } from 'react-router-dom';
 import ToastNotification from './ToastNotification';
 
 export const socket = io();

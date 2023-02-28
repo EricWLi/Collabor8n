@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import Whiteboard from './components/Whiteboard';
 import canvasLoader from './loaders/canvasLoader';
+import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   const router = createBrowserRouter([
@@ -48,7 +49,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </ThemeProvider>
   );
 }
