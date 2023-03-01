@@ -1,7 +1,7 @@
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, ScopedCssBaseline } from '@mui/material';
 import { AuthProvider } from './contexts/AuthContext';
 import HomePage from './pages/HomePage'
 import Dashboard from './pages/Dashboard';
@@ -11,6 +11,37 @@ import Whiteboard from './components/Whiteboard';
 import canvasLoader from './loaders/canvasLoader';
 
 function App() {
+  // Theme for home, login, signup, and dashboard pages.
+  const theme = createTheme({
+    palette: {
+      mode: 'dark',
+      background: {
+        default: '#1A1A1A'
+      },
+      primary: {
+        main: '#FD7547',
+        contrastText: '#FFFFFF',
+      },
+      secondary: {
+        main: '#2196F3',
+      }
+    }
+  });
+
+  // Theme for the whiteboard.
+  const boardTheme = createTheme({
+    palette: {
+      mode: 'light',
+      primary: {
+        main: '#FD7547',
+        contrastText: '#FFFFFF',
+      },
+      secondary: {
+        main: '#2196F3',
+      }
+    }
+  });
+
   const router = createBrowserRouter([
     {
       path: '/',
@@ -30,26 +61,16 @@ function App() {
     },
     {
       path: '/canvases/:canvasId',
-      element: <Whiteboard />,
+      element: (
+        <ThemeProvider theme={boardTheme}>
+          <ScopedCssBaseline>
+            <Whiteboard />
+          </ScopedCssBaseline>
+        </ThemeProvider>
+      ),
       loader: canvasLoader
     }
   ]);
-
-  const theme = createTheme({
-    palette: {
-      mode: 'dark',
-      background: {
-        default: '#1A1A1A'
-      },
-      primary: {
-        main: '#FD7547',
-        contrastText: '#FFFFFF',
-      },
-      secondary: {
-        main: '#2196F3',
-      }
-    }
-  });
 
   return (
     <ThemeProvider theme={theme}>
