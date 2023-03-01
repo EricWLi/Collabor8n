@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthContext';
 import { Container } from '@mui/material';
+import HeaderBar from '../components/HeaderBar';
 
 function Dashboard() {
   const { user } = useAuthContext();
@@ -15,6 +16,8 @@ function Dashboard() {
 
   return (
     <Container>
+      <HeaderBar />
+      
       <h1>Dashboard</h1>
     </Container>
   );
