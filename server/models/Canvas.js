@@ -16,6 +16,8 @@ const CanvasSchema = new Schema({
             }],
             count: Number
     }],
+    thumbnail: { type: Buffer, select: false },
+    thumbnailTs: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 });

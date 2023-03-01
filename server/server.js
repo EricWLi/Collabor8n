@@ -19,6 +19,7 @@ const io = new Server(server, {
 });
 
 const Canvas = require('./models/Canvas');
+const { shouldUpdateThumbnail, generateThumbnail } = require('./lib/thumbnail');
 
 app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(cookieParser());
@@ -41,13 +42,31 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            await Canvas.updateOne({ _id: roomId }, { $push: { objects: drawing } });
+            let update = {
+                $push: { objects: drawing },
+                $currentDate: { updatedAt: true }
+            };
+
+            if (await shouldUpdateThumbnail(roomId)) {
+                update.thumbnail = await generateThumbnail(roomId);
+                update.$currentDate.thumbnailTs = true;
+            }
+
+            await Canvas.updateOne({ _id: roomId }, update);
             socket.broadcast.to(roomId).emit('drawing', drawing);
         });
 
         // Resync all the clients.
         socket.on('resyncall', async (canvas) => {
-            await Canvas.updateOne({ _id: roomId }, { objects: canvas });
+            await Canvas.updateOne(
+                {
+                    _id: roomId
+                },
+                {
+                    objects: canvas,
+                    $currentDate: { updatedAt: true }
+                });
+
             socket.broadcast.to(roomId).emit('resync', canvas);
         });
 
