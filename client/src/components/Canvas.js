@@ -36,10 +36,20 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
     const x = event.clientX ? event.clientX : event.touches[0].clientX;
     const y = event.clientY ? event.clientY : event.touches[0].clientY;
 
+    const canvas = canvasRef.current;
+    const boundingBox = canvas.getBoundingClientRect();
+
+    const scaleX = canvas.width / boundingBox.width;
+    const scaleY = canvas.height / boundingBox.height;
+
+    // Calculate new coordinates by scale factor
+    const transformedX = Math.floor((x - boundingBox.left) * scaleX);
+    const transformedY = Math.floor((y - boundingBox.top) * scaleY);
+
     if (tool.name === 'pen') {
-      addPoint(x, y);
+      addPoint(transformedX, transformedY);
     } else if (tool.name === 'eraser') {
-      erase(x, y);
+      erase(transformedX, transformedY);
     }
   }
 
@@ -89,22 +99,12 @@ function Canvas({ width, height, tool, strokes, updateStrokes }) {
   }
 
   function addPoint(x, y) {
-    const canvas = canvasRef.current;
-    const boundingBox = canvas.getBoundingClientRect();
-
-    const scaleX = canvas.width / boundingBox.width;
-    const scaleY = canvas.height / boundingBox.height;
-
-    // Calculate new coordinates by scale factor
-    const transformedX = Math.floor((x - boundingBox.left) * scaleX);
-    const transformedY = Math.floor((y - boundingBox.top) * scaleY);
-
     const points = currStroke ? currStroke.points : [];
 
     setCurrStroke({
       color: tool.color,
       width: tool.size,
-      points: [...points, { x: transformedX, y: transformedY }]
+      points: [...points, { x: x, y: y }]
     });
   }
 

@@ -1,9 +1,16 @@
 import { Container, Box, Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useAuthContext } from '../contexts/AuthContext';
 import { ReactComponent as LogoHorizontal } from '../assets/logo-horizontal.svg';
 import { ReactComponent as HeroImage } from '../assets/hero-image.svg';
 
 function HomePage() {
+  const { signout, user } = useAuthContext();
+
+  async function handleLogout() {
+    await signout();
+  }
+
   return (
     <Container>
       <Box
@@ -35,25 +42,40 @@ function HomePage() {
             gap: '16px'
           }}
         >
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ borderRadius: '24px' }}
-            component={Link}
-            to="/login"
-          >
-            Login
-          </Button>
+          { user ? 
+          (
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ borderRadius: '24px' }}
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          ) : 
+          (
+            <>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ borderRadius: '24px' }}
+                component={Link}
+                to="/login"
+              >
+                Login
+              </Button>
 
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ borderRadius: '24px' }}
-            component={Link}
-            to="/signup"
-          >
-            Sign Up
-          </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ borderRadius: '24px' }}
+                component={Link}
+                to="/signup"
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
         </Box>
       </Box>
 
@@ -85,12 +107,12 @@ function HomePage() {
         <Box mt={4}>
           <Button
             variant="contained"
-            color="primary"
+            color={user ? 'secondary' : 'primary'}
             sx={{ borderRadius: '24px' }}
             component={Link}
-            to="/signup"
+            to={user ? '/dashboard' : '/signup'}
           >
-            Get Started
+            {user ? 'Go to Dashboard' : 'Get Started'}
           </Button>
         </Box>
 

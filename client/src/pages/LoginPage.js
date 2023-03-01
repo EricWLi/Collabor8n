@@ -8,21 +8,22 @@ function LoginPage() {
   const { loginAsGuest, login, user, error, setError } = useAuthContext();
   const navigate = useNavigate();
 
-  // Clear error on component unmount
+  // If user is already logged in, redirect to dashboard.
+  // Cleanup error message when unmounting component.
   useEffect(() => {
+    if (user) {
+      navigate('/dashboard', { replace: true });
+    }
+
     return () => {
       setError(null);
     }
-  }, [setError]);
+  }, [user, navigate, setError]);
 
   async function handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const success = await login(data.get('username'), data.get('password'));
-
-    if (success) {
-      navigate('/dashboard');
-    }
+    await login(data.get('username'), data.get('password'));
   }
 
   async function handleGuestLogin() {

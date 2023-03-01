@@ -1,13 +1,17 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthContext';
 import { Container } from '@mui/material';
-import { Navigate } from 'react-router-dom';
 
 function Dashboard() {
   const { user } = useAuthContext();
+  const navigate = useNavigate();
 
-  if (!user) {
-    return <Navigate to={'/login'} />
-  }
+  useEffect(() => {
+    if (!user) {
+      navigate('/login', { replace: true });
+    }
+  });
 
   return (
     <Container>

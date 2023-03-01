@@ -35,6 +35,7 @@ io.on('connection', (socket) => {
         console.log(`Client ${socket.id} joined room ${roomId}.`);
         socket.join(roomId);
 
+        // Listen for drawing events.
         socket.on('drawing', async (drawing) => {
             if (!drawing) {
                 return;
@@ -44,18 +45,29 @@ io.on('connection', (socket) => {
             socket.broadcast.to(roomId).emit('drawing', drawing);
         });
 
+        // Resync all the clients.
         socket.on('resyncall', async (canvas) => {
             await Canvas.updateOne({ _id: roomId }, { objects: canvas });
             socket.broadcast.to(roomId).emit('resync', canvas);
         });
+
+        // Leave the room.
+        socket.on('leave', () => {
+            console.log(`Client ${socket.id} left room ${roomId}.`);
+            socket.leave(roomId);
+
+            // Clean up listeners.
+            socket.removeAllListeners('drawing');
+            socket.removeAllListeners('resyncall');
+            socket.removeAllListeners('leave');
+        });
     });
 
-    socket.on('leave', (id) => {
-        console.log(`Client ${socket.id} left room ${id}.`);
-        socket.leave(id);
-    })
-})
+    socket.on('disconnect', () => {
+        console.log(`Client ${socket.id} disconnected.`);
+    });
+});
 
 server.listen(port, () => {
     console.log(`Listening on port ${port}`);
-})
+});

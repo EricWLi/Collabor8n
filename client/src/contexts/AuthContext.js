@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect } from 'react';
 import { useState } from 'react';
+import LoadingScreen from '../components/LoadingScreen';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -19,6 +21,8 @@ export function AuthProvider({ children }) {
       } catch {
         console.log('Error fetching token.');
       }
+
+      setIsLoading(false);
     }
 
     fetchToken();
@@ -57,7 +61,7 @@ export function AuthProvider({ children }) {
 
       if (data.error) {
         setError(data.error.message);
-      } else {
+      } else if (data.token) {
         setError(null);
         setUser(data);
         return data;
@@ -70,14 +74,10 @@ export function AuthProvider({ children }) {
   const signout = async () => {
     try {
       const res = await fetch('/api/users/logout', { method: 'POST' });
-      const data = await res.json();
 
-      if (data.error) {
-        setError(data.error.message);
-      } else {
+      if (res.ok) {
         setError(null);
         setUser(null);
-        return data;
       }
     } catch {
       setError('An error occurred while logging out. Please try again later.');
@@ -103,6 +103,10 @@ export function AuthProvider({ children }) {
     } else {
       setUser(data);
     }
+  }
+
+  if (isLoading) {
+    return <LoadingScreen />;
   }
 
   return (

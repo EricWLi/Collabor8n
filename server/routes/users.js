@@ -32,6 +32,7 @@ router.post('/login', async (req, res) => {
         );
 
         res
+            .status(200)
             .cookie('token', token, { httpOnly: true, maxAge: 86400000 })
             .json({ token });
             
@@ -61,14 +62,23 @@ router.post('/register', async (req, res) => {
         });
 
         await user.save();
-        res.status(201).json({ id: user._id });
+        
+        const token = jwtUtil.createToken(
+            { userId: user._id }, 
+            { expiresIn: '1d' }
+        );
+
+        res
+            .status(201)
+            .cookie('token', token, { httpOnly: true, maxAge: 86400000 })
+            .json({ token });
     } catch (err) {
         res.status(400).json({ error: { message: err.message }});
     }
 });
 
 // POST /api/users/logout
-router.post('/logout', jwtAuthentication(), (req, res) => {
+router.post('/logout', (req, res) => {
     res.clearCookie('token').send();
 })
 

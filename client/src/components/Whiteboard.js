@@ -1,7 +1,7 @@
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
 import { useLoaderData } from 'react-router-dom';
+import { AppBar, Box, Typography } from '@mui/material';
 import io from 'socket.io-client';
-import NavBar from './NavBar'
 import Canvas from './Canvas';
 import ChatBox from './ChatBox';
 import Toolbar from './Toolbar';
@@ -12,20 +12,32 @@ export const socket = io();
 export const ToolContext = createContext(null);
 
 function Whiteboard() {
+  const { width, height } = useWindowResize();
   const board = useLoaderData();
   const [strokes, setStrokes] = useState(board && board.objects ? board.objects : []);
-  const { width, height } = useWindowResize();
   const [tool, setTool] = useState({
     name: 'pen',
     size: 3,
     color: '#000000'
   });
 
+  useEffect(() => {
+    if (board && board._id) {
+      socket.emit('join', board._id);
+      console.log('Joined room', board._id);
+    }
+    
+    return () => {
+      socket.emit('leave', board._id)
+      console.log('Left room', board._id);
+    };
+  }, []);
+
   /* Handlers */
 
   function handleToolChange(newTool) {
     setTool({
-      ...tool, 
+      ...tool,
       ...newTool
     });
   }
@@ -41,8 +53,11 @@ function Whiteboard() {
   }
 
   return (
-    <div className="whiteboard-container">
-      <NavBar />
+    <Box className="whiteboard-container">
+      <AppBar position="fixed">
+        <Typography>Collabor8n</Typography>
+      </AppBar>
+
       <Canvas width={width} height={height} tool={tool} strokes={strokes} updateStrokes={updateStrokes} />
 
       <ToolContext.Provider value={tool}>
@@ -52,7 +67,7 @@ function Whiteboard() {
       <ChatBox />
 
       <ToastNotification board={board} />
-    </div>
+    </Box>
   );
 }
 
