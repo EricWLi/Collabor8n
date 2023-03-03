@@ -5,6 +5,8 @@
   },
   "dependencies": {
     "argon2": "^0.30.3",
+    "canvas": "^2.11.0",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
