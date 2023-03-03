@@ -42,17 +42,16 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            let update = {
+            await Canvas.updateOne({ _id: roomId }, {
                 $push: { objects: drawing },
                 $currentDate: { updatedAt: true }
-            };
+            });
 
             if (await shouldUpdateThumbnail(roomId)) {
-                update.thumbnail = await generateThumbnail(roomId);
-                update.$currentDate.thumbnailTs = true;
+                const thumbnail = await generateThumbnail(roomId);
+                await Canvas.updateOne({ _id: roomId }, { thumbnail, $currentDate: { thumbnailTs: true } });
             }
 
-            await Canvas.updateOne({ _id: roomId }, update);
             socket.broadcast.to(roomId).emit('drawing', drawing);
         });
 
@@ -70,6 +69,10 @@ io.on('connection', (socket) => {
             socket.broadcast.to(roomId).emit('resync', canvas);
         });
 
+        socket.on('chat', (message) => {
+            io.to(roomId).emit('chat', message);
+        });
+
         // Leave the room.
         socket.on('leave', () => {
             console.log(`Client ${socket.id} left room ${roomId}.`);
@@ -78,6 +81,7 @@ io.on('connection', (socket) => {
             // Clean up listeners.
             socket.removeAllListeners('drawing');
             socket.removeAllListeners('resyncall');
+            socket.removeAllListeners('chat');
             socket.removeAllListeners('leave');
         });
     });

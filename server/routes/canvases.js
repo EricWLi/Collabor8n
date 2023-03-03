@@ -3,6 +3,7 @@ const router = express.Router();
 const jwtAuthentication = require('../middlewares/jwtAuth');
 
 const Canvas = require('../models/Canvas');
+const { generateThumbnail } = require('../lib/thumbnail');
 
 // GET /api/canvases
 router.get('/', jwtAuthentication(), async (req, res) => {
@@ -34,7 +35,7 @@ router.get('/:canvasId', jwtAuthentication({ allowGuests: true }), async (req, r
     const canvas = await Canvas.findById(req.params.canvasId);
 
     if (!canvas) {
-        return res.status(404).json({ message: 'This canvas does not exist.' });
+        return res.status(404).json({ error: { message: 'This canvas does not exist.' }});
     } else if (!canvas.allowGuests) {
         if (req.jwt) {
             // User is logged in.
@@ -46,13 +47,13 @@ router.get('/:canvasId', jwtAuthentication({ allowGuests: true }), async (req, r
                 !containsUserId(canvas.owner) &&
                 !canvas.collaborators.some(containsUserId)
             ) {
-                return res.status(403).json({ message: 'You do not have access to this canvas. Please request permissions from the owner of this canvas.' });
+                return res.status(403).json({ error: { message: 'You do not have access to this canvas. Please request permissions from the owner of this canvas.' }});
             }
 
         } else {
             // User is not logged in, and the canvas is not public.
             // Return HTTP 401, redirect user to login.
-            return res.status(401).json({ message: 'The requested canvas is not public.' });
+            return res.status(401).json({ error: { message: 'The requested canvas is not public.' }});
         }
     }
 
@@ -66,6 +67,11 @@ router.post('/', jwtAuthentication({ allowGuests: true }), async (req, res) => {
     });
 
     await canvas.save();
+
+    const thumbnail = await generateThumbnail(canvas._id);
+    canvas.thumbnail = thumbnail;
+    await canvas.save();
+
     res.status(201).json(canvas);
 })
 

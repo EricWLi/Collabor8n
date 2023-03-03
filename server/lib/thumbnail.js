@@ -1,7 +1,7 @@
 const CanvasModel = require('../models/Canvas');
 const { createCanvas } = require('canvas');
 
-const THUMBNAIL_UPDATE_INTERVAL = 60000; // 1 minute
+const THUMBNAIL_UPDATE_INTERVAL = 30000; //  30 seconds
 const THUMBNAIL_WIDTH = 384;
 const THUMBNAIL_HEIGHT = 216;
 
@@ -53,30 +53,28 @@ async function shouldUpdateThumbnail(canvasId) {
 }
 
 async function generateThumbnail(id) {
+    const thumbnail = createCanvas(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
     const canvasQuery = await CanvasModel.findById(id);
 
-    if (!canvasQuery) {
-        return null;
+    if (canvasQuery) {
+        // Get all paths from database and calculate dimensions
+        const paths = canvasQuery.objects;
+        let dimensions = getDimensions(paths);
+
+        // Add padding to the sides
+        dimensions.width += dimensions.width * 0.1;
+        dimensions.height += dimensions.height * 0.1;
+
+        // Draw paths onto canvas
+        const canvas = createCanvas(dimensions.width, dimensions.height);
+        const canvasCtx = canvas.getContext('2d');
+        paths.forEach(path => draw(canvasCtx, path));
+
+        // Create thumbnail buffer
+        const thumbnailCtx = thumbnail.getContext('2d');
+        thumbnailCtx.drawImage(canvas, 0, 0, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
     }
 
-    // Get all paths from database and calculate dimensions
-    const paths = canvasQuery.objects;
-    let dimensions = getDimensions(paths);
-
-    // Add padding to the sides
-    dimensions.width += dimensions.width * 0.1;
-    dimensions.height += dimensions.height * 0.1;
-
-    // Draw paths onto canvas
-    const canvas = createCanvas(dimensions.width, dimensions.height);
-    const canvasCtx = canvas.getContext('2d');
-    paths.forEach(path => draw(canvasCtx, path));
-
-    // Create thumbnail buffer
-    const thumbnail = createCanvas(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-    const thumbnailCtx = thumbnail.getContext('2d');
-    thumbnailCtx.drawImage(canvas, 0, 0, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-    
     return thumbnail.toBuffer("image/png");
 }
 
