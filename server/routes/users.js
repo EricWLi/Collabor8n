@@ -2,19 +2,39 @@ const express = require('express');
 const router = express.Router();
 
 const jwtUtil = require('../lib/jwtUtil');
-const jwtAuthentication = require('../middlewares/jwtAuth');
 const User = require('../models/User');
+
+function createToken(user) {
+    return jwtUtil.createToken(
+        {
+            userId: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username
+        },
+        {
+            expiresIn: '1d'
+        }
+    );
+}
 
 // GET /api/users/token
 router.get('/token', (req, res) => {
-    const token = { token: req.cookies.token };
-    res.status(200).json(token);
+    const token = req.cookies.token;
+
+    try {
+        jwtUtil.validateToken(token);
+        res.status(200).json({ token });
+    } catch {
+        res.status(401).json({ error: { message: 'Invalid token.' } });
+    }
 });
 
 // POST /api/users/login
 router.post('/login', async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.body.username });
+        const user = await User.findOne({ username: req.body.username })
+            .collation({ locale: 'en', strength: 2 });
 
         if (!user) {
             res.status(401).json({ error: { message: `User "${req.body.username}" does not exist.` }});
@@ -26,10 +46,7 @@ router.post('/login', async (req, res) => {
             return;
         }
 
-        const token = jwtUtil.createToken(
-            { userId: user._id }, 
-            { expiresIn: '1d' }
-        );
+        const token = createToken(user);
 
         res
             .status(200)
@@ -47,7 +64,8 @@ router.post('/register', async (req, res) => {
     // before it is stored in the database. See the User schema.
 
     try {
-        const userExists = await User.findOne({ username: req.body.username });
+        const userExists = await User.findOne({ username: req.body.username })
+            .collation({ locale: 'en', strength: 2 });
 
         if (userExists) {
             res.status(400).json({ error: { message: `User "${userExists.username}" already exists.` }});
@@ -63,10 +81,7 @@ router.post('/register', async (req, res) => {
 
         await user.save();
         
-        const token = jwtUtil.createToken(
-            { userId: user._id }, 
-            { expiresIn: '1d' }
-        );
+        const token = createToken(user);
 
         res
             .status(201)

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect } from 'react';
 import { useState } from 'react';
+import jwt_decode from 'jwt-decode';
 import LoadingScreen from '../components/LoadingScreen';
 
 const AuthContext = createContext();
@@ -15,8 +16,12 @@ export function AuthProvider({ children }) {
         const res = await fetch('/api/users/token');
         const data = await res.json();
 
-        if (data && data.token) {
-          setUser(data);
+        if (data.token) {
+          setUser(getUserFromToken(data.token));
+        } else if (data.error) {
+            setUser(null);
+            setError(null);
+            setIsLoading(false);
         }
       } catch {
         console.log('Error fetching token.');
@@ -25,7 +30,9 @@ export function AuthProvider({ children }) {
       setIsLoading(false);
     }
 
-    fetchToken();
+    if (!user) {
+      fetchToken();
+    }
   }, []);
 
   const loginAsGuest = async () => {
@@ -37,7 +44,7 @@ export function AuthProvider({ children }) {
         setError(data.error.message);
       } else {
         setError(null);
-        return `/canvases/${data._id}`;
+        return `/boards/${data._id}`;
       }
     } catch {
       setError('An error occurred while logging in as guest. Please try again later.');
@@ -62,9 +69,8 @@ export function AuthProvider({ children }) {
       if (data.error) {
         setError(data.error.message);
       } else if (data.token) {
+        setUser(getUserFromToken(data.token));
         setError(null);
-        setUser(data);
-        return data;
       }
     } catch {
       setError('An error occurred while logging in. Please try again later.');
@@ -76,8 +82,8 @@ export function AuthProvider({ children }) {
       const res = await fetch('/api/users/logout', { method: 'POST' });
 
       if (res.ok) {
-        setError(null);
         setUser(null);
+        setError(null);
       }
     } catch {
       setError('An error occurred while logging out. Please try again later.');
@@ -101,7 +107,15 @@ export function AuthProvider({ children }) {
     if (data.error) {
       setError(data.error.message);
     } else {
-      setUser(data);
+      setUser(getUserFromToken(data.token));
+      setError(null);
+    }
+  }
+
+  const getUserFromToken = (token) => {
+    return {
+      ...jwt_decode(token),
+      token
     }
   }
 

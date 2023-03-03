@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { Pencil, Eraser, Palette, ArrowCounterclockwise, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 import ToolbarMenu from './ToolbarMenu';
-import { ToolContext } from './Whiteboard';
+import { ToolContext } from '../pages/Whiteboard';
 
 function Toolbar({ handleToolChange, handleUndo }) {
   const [open, setOpen] = useState(true);

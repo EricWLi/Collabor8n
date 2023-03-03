@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ToolContext } from './Whiteboard';
+import { ToolContext } from '../pages/Whiteboard';
 
 function ColorMenu({ handleToolChange }) {
   const tool = useContext(ToolContext);

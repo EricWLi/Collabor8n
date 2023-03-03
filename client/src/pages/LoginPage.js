@@ -52,7 +52,6 @@ function LoginPage() {
             label="Username"
             name="username"
             autoComplete="username"
-            autoFocus
             required
           />
 

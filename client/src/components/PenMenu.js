@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Slider } from '@mui/material';
-import { ToolContext } from './Whiteboard';
+import { ToolContext } from '../pages/Whiteboard';
 
 function PenMenu({ handleToolChange }) {
   const tool = useContext(ToolContext);

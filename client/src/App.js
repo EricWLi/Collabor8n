@@ -3,12 +3,14 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, ScopedCssBaseline } from '@mui/material';
 import { AuthProvider } from './contexts/AuthContext';
+import io from 'socket.io-client';
 import HomePage from './pages/HomePage'
 import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-import Whiteboard from './components/Whiteboard';
-import canvasLoader from './loaders/canvasLoader';
+import Whiteboard from './pages/Whiteboard';
+
+export const socket = io();
 
 function App() {
   // Theme for home, login, signup, and dashboard pages.
@@ -60,15 +62,14 @@ function App() {
       element: <SignupPage />
     },
     {
-      path: '/canvases/:canvasId',
+      path: '/boards/:boardId',
       element: (
         <ThemeProvider theme={boardTheme}>
           <ScopedCssBaseline>
             <Whiteboard />
           </ScopedCssBaseline>
         </ThemeProvider>
-      ),
-      loader: canvasLoader
+      )
     }
   ]);
 

@@ -1,37 +1,45 @@
 import { useState, createContext, useEffect } from 'react';
-import { useLoaderData } from 'react-router-dom';
-import { AppBar, Box, Typography } from '@mui/material';
-import io from 'socket.io-client';
-import Canvas from './Canvas';
-import ChatBox from './ChatBox';
-import Toolbar from './Toolbar';
+import { useParams } from 'react-router-dom';
 import useWindowResize from '../hooks/useWindowResize';
-import ToastNotification from './ToastNotification';
+import useBoardById from '../hooks/useBoardById';
+import { useAuthContext } from '../contexts/AuthContext';
 
-export const socket = io();
+import { AppBar, Box, Typography } from '@mui/material';
+import { socket } from '../App';
+
+import Canvas from '../components/Canvas';
+import ChatBox from '../components/ChatBox';
+import Toolbar from '../components/Toolbar';
+import ToastNotification from '../components/ToastNotification';
+
 export const ToolContext = createContext(null);
 
 function Whiteboard() {
-  const { width, height } = useWindowResize();
-  const board = useLoaderData();
-  const [strokes, setStrokes] = useState(board && board.objects ? board.objects : []);
+  const { boardId } = useParams();
+  const board = useBoardById(boardId);
+  const [strokes, setStrokes] = useState([]);
   const [tool, setTool] = useState({
     name: 'pen',
     size: 3,
     color: '#000000'
   });
 
+  const { user } = useAuthContext();
+  const { width, height } = useWindowResize();
+
   useEffect(() => {
     if (board && board._id) {
+      setStrokes(board.objects);
+
       socket.emit('join', board._id);
       console.log('Joined room', board._id);
+
+      return () => {
+        socket.emit('leave', board._id)
+        console.log('Left room', board._id);
+      };
     }
-    
-    return () => {
-      socket.emit('leave', board._id)
-      console.log('Left room', board._id);
-    };
-  }, []);
+  }, [board]);
 
   /* Handlers */
 
@@ -64,9 +72,9 @@ function Whiteboard() {
         <Toolbar handleToolChange={handleToolChange} handleUndo={handleUndoStroke} />
       </ToolContext.Provider>
 
-      <ChatBox />
+      <ChatBox user={user} />
 
-      <ToastNotification board={board} />
+      <ToastNotification notification={board} />
     </Box>
   );
 }

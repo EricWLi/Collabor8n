@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { socket } from './Whiteboard';
+import { socket } from '../App';
 
 function Canvas({ width, height, tool, strokes, updateStrokes }) {
   const [mouseDown, setMouseDown] = useState(false);

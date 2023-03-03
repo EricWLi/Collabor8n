@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Alert, Snackbar } from "@mui/material";
 import { Link } from "react-router-dom";
 
-function ToastNotification({ board }) {
+function ToastNotification({ notification }) {
   const [open, setOpen] = useState(true);
 
-  if (!board) {
+  if (!notification) {
     return;
   }
 
@@ -18,10 +18,10 @@ function ToastNotification({ board }) {
     setOpen(false);
   }
 
-  const severity = board.error ? 'error' : 'success';
-  const duration = board.error ? null : 6000;
-  const message = board.error ? board.message : 'You are connected!';
-  const isUnauthorized = board.status === 401;
+  const severity = notification.error ? 'error' : 'success';
+  const duration = notification.error ? null : 6000;
+  const message = notification.error ? notification.error.message : 'You are connected!';
+  const isUnauthorized = notification?.error?.status === 401;
 
   return (
     <Snackbar
