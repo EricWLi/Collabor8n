@@ -55,7 +55,6 @@ function SignupPage() {
             label="First Name"
             name="first-name"
             autoComplete="given-name"
-            autoFocus
             required
           />
 

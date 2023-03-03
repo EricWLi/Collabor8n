@@ -20,17 +20,17 @@ function HeaderBar() {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '8px 24px',
-          gap: '64px',
+          gap: '24px',
           height: '80px',
           left: '0px',
           right: '0px',
-          top: '0px'
+          top: '0px',
+          marginTop: '8px'
         }}
       >
-        <Link to="/">
-          <LogoHorizontal style={{ minWidth: '230px', height: '51px' }} />
-        </Link>
+        <Box maxWidth='256px' component={Link} to="/">
+          <LogoHorizontal style={{ width: '100%' }} />
+        </Box>
 
         <Box
           sx={{
@@ -39,7 +39,7 @@ function HeaderBar() {
             flexDirection: 'row',
             alignItems: 'flex-start',
             padding: '0px',
-            gap: '16px'
+            gap: '8px'
           }}
         >
           {user ?

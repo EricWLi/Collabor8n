@@ -20,16 +20,14 @@ function HomePage() {
           width: '100%'
         }}
       >
-        <Box mt={4}>
+        <Box mt={4} width="60%">
           <Typography
             sx={{
               fontFamily: 'Roboto',
-              fontSize: '72px',
+              fontSize: '4vw',
               fontStyle: 'normal',
               fontWeight: 500,
-              lineHeight: '96px',
               textAlign: 'center',
-              maxWidth: '842px'
             }}
           >
             Sketch, draw, and brainstorm like never before
