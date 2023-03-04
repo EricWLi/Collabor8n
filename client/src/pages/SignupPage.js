@@ -1,24 +1,12 @@
-import { useEffect } from 'react';
 import { Box, Container, Button, TextField, Link, Typography } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthContext';
 import LogoAvatar from '../components/LogoAvatar';
+import useRedirectIfLoggedIn from '../hooks/useRedirectIfLoggedIn';
 
 function SignupPage() {
-  const { signup, user, error, setError } = useAuthContext();
-  const navigate = useNavigate();
-
-  // If user is already logged in, redirect to dashboard.
-  // Cleanup error message when unmounting component.
-  useEffect(() => {
-    if (user) {
-      navigate('/dashboard', { replace: true });
-    }
-
-    return () => {
-      setError(null);
-    }
-  }, [user, navigate, setError]);
+  useRedirectIfLoggedIn();
+  const { signup, error } = useAuthContext();
 
   async function handleSubmit(event) {
     event.preventDefault();
