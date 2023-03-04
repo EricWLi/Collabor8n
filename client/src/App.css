@@ -1,6 +1,9 @@
 body {
-  /* overflow: hidden; */
   font-family: 'Roboto', sans-serif;
+}
+
+.no-scroll {
+  overflow: hidden;
 }
 
 .whiteboard-container {

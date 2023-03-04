@@ -1,16 +1,18 @@
 import { useState, createContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useWindowResize from '../hooks/useWindowResize';
 import useBoardById from '../hooks/useBoardById';
 import { useAuthContext } from '../contexts/AuthContext';
 
-import { AppBar, Box, Typography } from '@mui/material';
+import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@mui/material';
 import { socket } from '../App';
 
 import Canvas from '../components/Canvas';
 import ChatBox from '../components/ChatBox';
-import Toolbar from '../components/Toolbar';
+import ToolSelector from '../components/ToolSelector';
 import ToastNotification from '../components/ToastNotification';
+import useHideScroll from '../hooks/useHideScroll';
+import { House } from 'react-bootstrap-icons';
 
 export const ToolContext = createContext(null);
 
@@ -26,6 +28,7 @@ function Whiteboard() {
 
   const { user } = useAuthContext();
   const { width, height } = useWindowResize();
+  useHideScroll();
 
   useEffect(() => {
     if (board && board._id) {
@@ -42,7 +45,6 @@ function Whiteboard() {
   }, [board]);
 
   /* Handlers */
-
   function handleToolChange(newTool) {
     setTool({
       ...tool,
@@ -63,13 +65,24 @@ function Whiteboard() {
   return (
     <Box className="whiteboard-container">
       <AppBar position="fixed">
-        <Typography>Collabor8n</Typography>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" component={Link} to="/dashboard">
+            <House />
+          </IconButton>
+
+          <Typography variant="h6" ml={2} sx={{ flexGrow: 1 }}>
+            Collabor8n
+          </Typography>
+
+          <Button color="inherit">Share</Button>
+          <Button color="inherit" component={Link} to="/dashboard">Signout</Button>
+        </Toolbar>
       </AppBar>
 
       <Canvas width={width} height={height} tool={tool} strokes={strokes} updateStrokes={updateStrokes} />
 
       <ToolContext.Provider value={tool}>
-        <Toolbar handleToolChange={handleToolChange} handleUndo={handleUndoStroke} />
+        <ToolSelector handleToolChange={handleToolChange} handleUndo={handleUndoStroke} />
       </ToolContext.Provider>
 
       <ChatBox user={user} />
