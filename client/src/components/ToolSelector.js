@@ -1,9 +1,9 @@
 import { useState, useContext } from 'react';
 import { Pencil, Eraser, Palette, ArrowCounterclockwise, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
-import ToolbarMenu from './ToolbarMenu';
+import ToolSelectorMenu from './ToolSelectorMenu';
 import { ToolContext } from '../pages/Whiteboard';
 
-function Toolbar({ handleToolChange, handleUndo }) {
+function ToolSelector({ handleToolChange, handleUndo }) {
   const [open, setOpen] = useState(true);
   const [currentMenu, setCurrentMenu] = useState(null);
   const tool = useContext(ToolContext);
@@ -47,7 +47,7 @@ function Toolbar({ handleToolChange, handleUndo }) {
           <div className="toolbar-item tool-collapse" onClick={toggleToolbar}><ChevronLeft /></div>
         </div>
 
-        { currentMenu && <ToolbarMenu menu={currentMenu} handleToolChange={handleToolChange} /> }
+        { currentMenu && <ToolSelectorMenu menu={currentMenu} handleToolChange={handleToolChange} /> }
       </div>
     );
   } else {
@@ -62,4 +62,4 @@ function Toolbar({ handleToolChange, handleUndo }) {
   return content;
 }
 
-export default Toolbar;
+export default ToolSelector;

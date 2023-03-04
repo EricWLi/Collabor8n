@@ -1,7 +1,7 @@
 import ColorMenu from "./ColorMenu";
 import PenMenu from "./PenMenu";
 
-function ToolbarMenu({ menu, handleToolChange }) {
+function ToolSelectorMenu({ menu, handleToolChange }) {
   let content;
 
   switch (menu) {
@@ -24,4 +24,4 @@ function ToolbarMenu({ menu, handleToolChange }) {
   );
 }
 
-export default ToolbarMenu;
+export default ToolSelectorMenu;
