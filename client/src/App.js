@@ -12,67 +12,67 @@ import Whiteboard from './pages/Whiteboard';
 
 export const socket = io();
 
+// Theme for home, login, signup, and dashboard pages.
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    background: {
+      default: '#1A1A1A'
+    },
+    primary: {
+      main: '#FD7547',
+      contrastText: '#FFFFFF',
+    },
+    secondary: {
+      main: '#2196F3',
+    }
+  }
+});
+
+// Theme for the whiteboard.
+const boardTheme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#FD7547',
+      contrastText: '#FFFFFF',
+    },
+    secondary: {
+      main: '#2196F3',
+    }
+  }
+});
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <HomePage />
+  },
+  {
+    path: '/dashboard',
+    element: <Dashboard />
+  },
+  {
+    path: '/login',
+    element: <LoginPage />
+  },
+  {
+    path: '/signup',
+    element: <SignupPage />
+  },
+  {
+    path: '/boards/:boardId',
+    element: (
+      <ThemeProvider theme={boardTheme}>
+        <ScopedCssBaseline>
+          <Whiteboard />
+        </ScopedCssBaseline>
+      </ThemeProvider>
+    )
+  }
+]);
+
 function App() {
-  // Theme for home, login, signup, and dashboard pages.
-  const theme = createTheme({
-    palette: {
-      mode: 'dark',
-      background: {
-        default: '#1A1A1A'
-      },
-      primary: {
-        main: '#FD7547',
-        contrastText: '#FFFFFF',
-      },
-      secondary: {
-        main: '#2196F3',
-      }
-    }
-  });
-
-  // Theme for the whiteboard.
-  const boardTheme = createTheme({
-    palette: {
-      mode: 'light',
-      primary: {
-        main: '#FD7547',
-        contrastText: '#FFFFFF',
-      },
-      secondary: {
-        main: '#2196F3',
-      }
-    }
-  });
-
-  const router = createBrowserRouter([
-    {
-      path: '/',
-      element: <HomePage />
-    },
-    {
-      path: '/dashboard',
-      element: <Dashboard />
-    },
-    {
-      path: '/login',
-      element: <LoginPage />
-    },
-    {
-      path: '/signup',
-      element: <SignupPage />
-    },
-    {
-      path: '/boards/:boardId',
-      element: (
-        <ThemeProvider theme={boardTheme}>
-          <ScopedCssBaseline>
-            <Whiteboard />
-          </ScopedCssBaseline>
-        </ThemeProvider>
-      )
-    }
-  ]);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

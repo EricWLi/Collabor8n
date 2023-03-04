@@ -1,2 +1,4 @@
 # For deploying to Google App Engine.
 runtime: nodejs18
+
+default_expiration: '0s'
