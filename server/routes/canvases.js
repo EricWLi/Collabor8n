@@ -60,6 +60,21 @@ router.get('/:canvasId', jwtAuthentication({ allowGuests: true }), async (req, r
     res.json(canvas);
 });
 
+router.delete('/:canvasId', jwtAuthentication(), async (req, res) => {
+    const canvas = await Canvas.findById(req.params.canvasId);
+
+    if (!canvas) {
+        return res.status(404).json({ error: { message: 'This canvas does not exist.' } });
+    }
+
+    if (canvas.owner.equals(req.jwt.userId)) {
+        await canvas.delete();
+        return res.status(200).json({ message: 'Canvas deleted.' });
+    } else {
+        return res.status(403).json({ error: { message: 'You do not have permission to delete this canvas.' } });
+    }
+});
+
 router.post('/', jwtAuthentication({ allowGuests: true }), async (req, res) => {
     const canvas = new Canvas({
         owner: req.jwt?.userId,

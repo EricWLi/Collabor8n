@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthContext';
 import useUserBoards from '../hooks/useUserBoards';
-import { Button, Card, CardMedia, Container, Grid } from '@mui/material';
+import { Button, Container, Grid } from '@mui/material';
 import HeaderBar from '../components/HeaderBar';
+import ThumbnailCard from '../components/ThumbnailCard';
 
 function Dashboard() {
   const { user } = useAuthContext();
   const navigate = useNavigate();
-  const { boards, createNewBoard } = useUserBoards();
+  const { boards, createNewBoard, deleteBoard } = useUserBoards();
 
   useEffect(() => {
     if (!user) {
@@ -31,18 +32,7 @@ function Dashboard() {
   const boardCards = boards.map(board => {
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3}>
-        <Link to={`/boards/${board._id}`}>
-          <Card
-            key={board._id} sx={{
-              minWidth: '200px',
-              maxWidth: '384px',
-              height: '216px',
-              backgroundColor: 'white'
-            }}
-          >
-            <CardMedia image={`/images/thumbnail/${board._id}`} sx={{ width: '100%', height: '100%' }} />
-          </Card>
-        </Link>
+        <ThumbnailCard boardId={board._id} onDelete={deleteBoard} />
       </Grid>
     )
   });

@@ -28,7 +28,20 @@ function useUserBoards() {
     return await res.json();
   }
 
-  return { boards, createNewBoard };
+  const deleteBoard = async (id) => {
+    const res = await fetch(`/api/canvases/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${user.token}` }
+    });
+
+    if (res.ok) {
+      setBoards(boards.filter(board => board._id !== id));
+    }
+
+    return res.ok;
+  }
+
+  return { boards, createNewBoard, deleteBoard };
 }
 
 export default useUserBoards;
