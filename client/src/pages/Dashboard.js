@@ -1,21 +1,14 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../contexts/AuthContext';
-import useUserBoards from '../hooks/useUserBoards';
 import { Button, Container, Grid } from '@mui/material';
+import useRequireAuth from '../hooks/useRequireAuth';
+import useUserBoards from '../hooks/useUserBoards';
 import HeaderBar from '../components/HeaderBar';
 import ThumbnailCard from '../components/ThumbnailCard';
 
 function Dashboard() {
-  const { user } = useAuthContext();
-  const navigate = useNavigate();
+  const user = useRequireAuth();
   const { boards, createNewBoard, deleteBoard } = useUserBoards();
-
-  useEffect(() => {
-    if (!user) {
-      navigate('/login', { replace: true });
-    }
-  });
+  const navigate = useNavigate();
 
   if (!user || boards.error) {
     return;
