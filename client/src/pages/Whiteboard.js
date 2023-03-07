@@ -1,18 +1,16 @@
 import { useState, createContext, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@mui/material';
+import { House } from 'react-bootstrap-icons';
 import useWindowResize from '../hooks/useWindowResize';
 import useBoardById from '../hooks/useBoardById';
+import useHideScroll from '../hooks/useHideScroll';
 import { useAuthContext } from '../contexts/AuthContext';
-
-import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@mui/material';
-import { socket } from '../App';
-
 import Canvas from '../components/Canvas';
 import ChatBox from '../components/ChatBox';
 import ToolSelector from '../components/ToolSelector';
 import ToastNotification from '../components/ToastNotification';
-import useHideScroll from '../hooks/useHideScroll';
-import { House } from 'react-bootstrap-icons';
+import { socket } from '../App';
 
 export const ToolContext = createContext(null);
 
@@ -26,7 +24,8 @@ function Whiteboard() {
     color: '#000000'
   });
 
-  const { user } = useAuthContext();
+  const navigate = useNavigate();
+  const { user, signout } = useAuthContext();
   const { width, height } = useWindowResize();
   useHideScroll();
 
@@ -62,6 +61,11 @@ function Whiteboard() {
     setStrokes(nextStrokes);
   }
 
+  async function handleSignout() {
+    await signout();
+    navigate('/login');
+  }
+
   return (
     <Box className="whiteboard-container">
       <AppBar position="fixed">
@@ -74,8 +78,18 @@ function Whiteboard() {
             Collabor8n
           </Typography>
 
-          <Button color="inherit">Share</Button>
-          <Button color="inherit" component={Link} to="/dashboard">Signout</Button>
+          {user ?
+            (
+              <Box>
+                <Button color="inherit">Share</Button>
+                <Button color="inherit" onClick={handleSignout}>Signout</Button>
+              </Box>
+            ) : (
+              <Box>
+                <Button color="inherit" component={Link} to="/login">Login</Button>
+              </Box>
+            )
+          }
         </Toolbar>
       </AppBar>
 

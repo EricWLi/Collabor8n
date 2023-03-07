@@ -7,10 +7,6 @@ import { useAuthContext } from '../contexts/AuthContext';
 function HeaderBar() {
   const { user, signout } = useAuthContext();
 
-  async function handleLogout() {
-    await signout();
-  }
-
   return (
     <>
       <Box
@@ -48,7 +44,7 @@ function HeaderBar() {
                 variant="contained"
                 color="error"
                 sx={{ borderRadius: '24px' }}
-                onClick={handleLogout}
+                onClick={signout}
               >
                 Logout
               </Button>
