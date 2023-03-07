@@ -6,7 +6,7 @@ import ChatMessage from './ChatMessage';
 
 function ChatBox({ user }) {
   const [open, setOpen] = useState(false);
-  const [guestName, setGuestName] = useState('Guest');
+  const [guestName, setGuestName] = useState('');
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
