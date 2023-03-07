@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 function ThumbnailCard({ boardId, onDelete }) {
   return (
     <Card
-      key={boardId}
       sx={{
         minWidth: '200px',
         maxWidth: '384px',
