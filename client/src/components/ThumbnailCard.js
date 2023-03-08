@@ -1,8 +1,13 @@
-import { Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, Typography } from "@mui/material";
+import { Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
 import { Trash3 } from 'react-bootstrap-icons';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { useAuthContext } from '../contexts/AuthContext';
 
 function ThumbnailCard({ board, onDelete }) {
+  const { user } = useAuthContext();
+
+  const isOwner = board.owner._id === user.userId;
+
   return (
     <Card
       sx={{
@@ -26,8 +31,11 @@ function ThumbnailCard({ board, onDelete }) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <IconButton onClick={() => onDelete(board._id)}>
-          <Trash3 color="black" />
+        <IconButton 
+          onClick={() => onDelete(board._id)} 
+          disabled={!isOwner}
+        >
+          <Trash3 color={isOwner ? 'black' : 'grey'} />
         </IconButton>
       </CardActions>
     </Card>
