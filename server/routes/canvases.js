@@ -25,7 +25,10 @@ router.get('/', jwtAuthentication(), async (req, res) => {
         };
     }
 
-    const canvases = await Canvas.find(query);
+    const canvases = await Canvas
+        .find(query)
+        .select('-objects')
+        .populate('owner', 'username firstName lastName');
 
     res.status(200).json(canvases);
 });

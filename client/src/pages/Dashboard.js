@@ -39,7 +39,7 @@ function Dashboard() {
   const boardCards = boards.map(board => {
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} key={board._id}>
-        <ThumbnailCard boardId={board._id} onDelete={() => setIdToDelete(board._id)} />
+        <ThumbnailCard board={board} onDelete={id => setIdToDelete(id)} />
       </Grid>
     )
   });
