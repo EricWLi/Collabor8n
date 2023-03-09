@@ -11,23 +11,24 @@ import ChatBox from '../components/ChatBox';
 import ToolSelector from '../components/ToolSelector';
 import ToastNotification from '../components/ToastNotification';
 import { socket } from '../App';
+import ShareDialog from '../components/ShareDialog';
 
 export const ToolContext = createContext(null);
 
 function Whiteboard() {
+  useHideScroll();
   const { boardId } = useParams();
   const board = useBoardById(boardId);
+  const { user, signout } = useAuthContext();
+  const { width, height } = useWindowResize();
+  const navigate = useNavigate();
+  const [showShare, setShowShare] = useState(false);
   const [strokes, setStrokes] = useState([]);
   const [tool, setTool] = useState({
     name: 'pen',
     size: 3,
     color: '#000000'
   });
-
-  const navigate = useNavigate();
-  const { user, signout } = useAuthContext();
-  const { width, height } = useWindowResize();
-  useHideScroll();
 
   useEffect(() => {
     if (board && board._id) {
@@ -81,7 +82,7 @@ function Whiteboard() {
           {user ?
             (
               <Box>
-                <Button color="inherit">Share</Button>
+                <Button color="inherit" onClick={() => setShowShare(true)}>Share</Button>
                 <Button color="inherit" onClick={handleSignout}>Signout</Button>
               </Box>
             ) : (
@@ -100,8 +101,8 @@ function Whiteboard() {
       </ToolContext.Provider>
 
       <ChatBox user={user} />
-
       <ToastNotification notification={board} />
+      <ShareDialog open={showShare} />
     </Box>
   );
 }

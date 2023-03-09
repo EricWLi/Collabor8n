@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const jwtUtil = require('../lib/jwtUtil');
+const jwtAuthentication = require('../middlewares/jwtAuth');
 const User = require('../models/User');
 
 function createToken(user) {
@@ -96,5 +97,21 @@ router.post('/register', async (req, res) => {
 router.post('/logout', (req, res) => {
     res.clearCookie('token').send();
 })
+
+// GET /api/users/search
+router.get('/search', async (req, res) => {
+    const query = req.query.q || req.query.query
+
+    if (!query) {
+        return res.json([]);
+    }
+
+    const results = await User
+        .find({ username: { $regex: '^' + query, $options: 'i'} })
+        .select('username firstName lastName')
+        .limit(10);
+
+    res.json(results);
+});
 
 module.exports = router;
