@@ -101,8 +101,13 @@ function Whiteboard() {
       </ToolContext.Provider>
 
       <ChatBox user={user} />
-      <ToastNotification notification={board} />
-      <ShareDialog open={showShare} />
+
+      { board &&
+        <>
+          <ToastNotification notification={board} />
+          <ShareDialog open={showShare} board={board} setOpen={setShowShare} onClose={() => setShowShare(false)} />
+        </>
+      }
     </Box>
   );
 }

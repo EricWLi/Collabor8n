@@ -9,7 +9,7 @@ import DeleteConfirmation from '../components/DeleteConfirmation';
 
 function Dashboard() {
   const user = useRequireAuth();
-  const { boards, createNewBoard, deleteBoard } = useUserBoards();
+  const { boards, fetchBoards, createNewBoard, deleteBoard } = useUserBoards();
   const [idToDelete, setIdToDelete] = useState(null);
   const [filter, setFilter] = useState('all');
   const [orderBy, setOrderBy] = useState('lastUpdated');
@@ -42,7 +42,7 @@ function Dashboard() {
         case 'owner':
           return board.owner._id === user.userId;
         case 'shared':
-          return board.collaborators.includes(user.userId)
+          return board.collaborators.some(collaborator => collaborator._id === user.userId);
         default:
           return true;
       }
@@ -86,6 +86,15 @@ function Dashboard() {
         </Grid>
 
         <Grid item>
+          <Button
+            variant="text"
+            size="small"
+            color="secondary"
+            onClick={fetchBoards}
+          >
+            Refresh
+          </Button>
+
           <Button
             variant="text"
             size="small"

@@ -6,18 +6,18 @@ function useUserBoards() {
   const { user } = useAuthContext();
 
   useEffect(() => {
-    const fetchBoards = async () => {
-      const response = await fetch("/api/canvases", {
-        method: 'GET',
-        headers: { Authorization: `Bearer ${user.token}` }
-      });
-
-      const boards = await response.json();
-      setBoards(boards);
-    };
-
     fetchBoards();
   }, [user]);
+
+  const fetchBoards = async () => {
+    const response = await fetch("/api/canvases", {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${user.token}` }
+    });
+
+    const boards = await response.json();
+    setBoards(boards);
+  };
 
   const createNewBoard = async () => {
     const res = await fetch('/api/canvases', {
@@ -41,7 +41,7 @@ function useUserBoards() {
     return res.ok;
   }
 
-  return { boards, createNewBoard, deleteBoard };
+  return { boards, fetchBoards, createNewBoard, deleteBoard };
 }
 
 export default useUserBoards;

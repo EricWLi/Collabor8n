@@ -28,14 +28,18 @@ router.get('/', jwtAuthentication(), async (req, res) => {
     const canvases = await Canvas
         .find(query)
         .select('-objects')
-        .populate('owner', 'username firstName lastName');
+        .populate('owner', 'username firstName lastName')
+        .populate('collaborators', 'username firstName lastName');;
 
     res.status(200).json(canvases);
 });
 
 // GET /api/canvases/{canvasId}
 router.get('/:canvasId', jwtAuthentication({ allowGuests: true }), async (req, res) => {
-    const canvas = await Canvas.findById(req.params.canvasId);
+    const canvas = await Canvas
+        .findById(req.params.canvasId)
+        .populate('owner', 'username firstName lastName')
+        .populate('collaborators', 'username firstName lastName');
 
     if (!canvas) {
         return res.status(404).json({ error: { message: 'This canvas does not exist.' }});
@@ -63,6 +67,33 @@ router.get('/:canvasId', jwtAuthentication({ allowGuests: true }), async (req, r
     res.json(canvas);
 });
 
+// PUT /api/canvases/{canvasId}
+router.put('/:canvasId', jwtAuthentication(), async (req, res) => {
+    const canvas = await Canvas
+        .findById(req.params.canvasId)
+        .select('-objects');
+
+    if (!canvas) {
+        return res.status(404).json({ error: { message: 'This canvas does not exist.' } });
+    }
+
+    if (canvas.owner.equals(req.jwt.userId)) {
+        if (req.body.allowGuests !== undefined) {
+            canvas.allowGuests = req.body.allowGuests;
+        }
+
+        if (req.body.collaborators) {
+            canvas.collaborators = req.body.collaborators;
+        }
+
+        await canvas.save();
+        return res.status(200).json(canvas);
+    } else {
+        return res.status(403).json({ error: { message: 'You do not have permission to edit this canvas.' } });
+    }
+});
+
+// DELETE /api/canvases/{canvasId}
 router.delete('/:canvasId', jwtAuthentication(), async (req, res) => {
     const canvas = await Canvas.findById(req.params.canvasId);
 
@@ -78,6 +109,7 @@ router.delete('/:canvasId', jwtAuthentication(), async (req, res) => {
     }
 });
 
+// POST /api/canvases
 router.post('/', jwtAuthentication({ allowGuests: true }), async (req, res) => {
     const canvas = new Canvas({
         owner: req.jwt?.userId,
