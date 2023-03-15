@@ -1,6 +1,6 @@
 # Collabor8n
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Collabor8n is a real-time, collaborative whiteboard platform that enables teams to draw, take notes, chat, and brainstorm together. Built using React, Node.js, Express, and MongoDB, Collabor8n provides an intuitive and interactive experience for users to collaborate effectively.  
   
@@ -69,5 +69,4 @@ npm run build
 npm run start
 ```
 
-6. You should be able to access Collabor8n locally from the port that you defined in your environment variables: http://localhost:\<port>  
-If you did not specify a port, the default port 8080 will be used.
+6. You should be able to access Collabor8n locally from the port that you defined in your environment variables.
