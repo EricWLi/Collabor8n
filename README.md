@@ -66,7 +66,7 @@ npm run build
 
 5. Start the Node.js/Express server
 ```
-npm run start
+npm start
 ```
 
 6. You should be able to access Collabor8n locally from the port that you defined in your environment variables.

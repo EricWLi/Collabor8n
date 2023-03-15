@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "build": "npm run build --prefix ./client",
-    "start": "node ./server/server.js"
+    "start": "node ./server/server.js",
+    "postinstall": "npm install --prefix ./client"
   },
   "author": "Eric W. Li",
   "license": "MIT",
