@@ -1,8 +1,12 @@
 {
+  "name": "collabor8n",
+  "version": "1.0.0",
   "scripts": {
     "build": "npm run build --prefix ./client",
     "start": "node ./server/server.js"
   },
+  "author": "Eric W. Li",
+  "license": "MIT",
   "dependencies": {
     "argon2": "^0.30.3",
     "canvas": "^2.11.0",
