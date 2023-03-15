@@ -16,7 +16,7 @@ You can see a live demo of Collabor8n at https://whiteboard.ericwli.com
 
 - Real-time drawing and collaboration using WebSockets via socket.io
 - Chat functionality
-- User authentication using JSON Web Tokens (JWT) and Argon2 password hashing
+- User authentication using JSON Web Tokens (JWT)
 - API service to save whiteboard drawings and manage sharing
 - Dashboard to see all of your saved drawings
 
